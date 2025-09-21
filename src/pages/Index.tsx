@@ -53,7 +53,7 @@ const Index = () => {
             </div>
             <div className="hidden md:flex space-x-6">
               <a href="#services" className="hover:text-primary transition-colors">Услуги</a>
-              <a href="#pricing" className="hover:text-primary transition-colors">Тарифы</a>
+              <a href="#pricing" className="hover:text-primary transition-colors">Стоимость</a>
               <a href="#booking" className="hover:text-primary transition-colors">Заказать</a>
               <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
             </div>
@@ -135,91 +135,11 @@ const Index = () => {
       {/* Pricing Section */}
       <section id="pricing" className="py-16 px-4">
         <div className="container mx-auto">
-          <h3 className="text-3xl font-bold text-center mb-12">Тарифы</h3>
+          <h3 className="text-3xl font-bold text-center mb-12">Рассчитать стоимость</h3>
           
           {/* Price Calculator */}
-          <div className="flex justify-center mb-12">
+          <div className="flex justify-center">
             <PriceCalculator />
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <Card className="border-2 hover:border-primary transition-colors">
-              <CardHeader>
-                <CardTitle className="text-center">Эконом</CardTitle>
-                <CardDescription className="text-center text-2xl font-bold text-primary">
-                  от 500₽
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Стандартный автомобиль</span>
-                </div>
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Переноска в комплекте</span>
-                </div>
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Опытный водитель</span>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-2 border-primary relative">
-              <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span className="bg-primary text-white px-4 py-1 rounded-full text-sm">Популярно</span>
-              </div>
-              <CardHeader>
-                <CardTitle className="text-center">Комфорт</CardTitle>
-                <CardDescription className="text-center text-2xl font-bold text-primary">
-                  от 800₽
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Комфортный автомобиль</span>
-                </div>
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Климат-контроль</span>
-                </div>
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Помощь с посадкой</span>
-                </div>
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Фото-отчет поездки</span>
-                </div>
-              </CardContent>
-            </Card>
-            <Card className="border-2 hover:border-primary transition-colors">
-              <CardHeader>
-                <CardTitle className="text-center">VIP</CardTitle>
-                <CardDescription className="text-center text-2xl font-bold text-primary">
-                  от 1500₽
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Премиум автомобиль</span>
-                </div>
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Ветеринар в поездке</span>
-                </div>
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Индивидуальный подход</span>
-                </div>
-                <div className="flex items-center">
-                  <Icon name="Check" className="text-green-500 mr-2" size={16} />
-                  <span>Срочная подача (15 мин)</span>
-                </div>
-              </CardContent>
-            </Card>
           </div>
         </div>
       </section>
