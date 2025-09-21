@@ -6,6 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
+import PriceCalculator from '@/components/PriceCalculator';
 
 interface BookingForm {
   petType: string;
@@ -135,6 +136,12 @@ const Index = () => {
       <section id="pricing" className="py-16 px-4">
         <div className="container mx-auto">
           <h3 className="text-3xl font-bold text-center mb-12">Тарифы</h3>
+          
+          {/* Price Calculator */}
+          <div className="flex justify-center mb-12">
+            <PriceCalculator />
+          </div>
+          
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <Card className="border-2 hover:border-primary transition-colors">
               <CardHeader>
