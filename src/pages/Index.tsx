@@ -50,7 +50,7 @@ const Index = () => {
           <nav className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
               <Icon name="Car" className="text-primary" size={32} />
-              <h1 className="text-2xl font-bold text-primary">ЗооТакси</h1>
+              <h1 className="text-2xl font-bold text-primary">ЗооТакси ВетМастер</h1>
             </div>
             <div className="hidden md:flex space-x-6">
               <a href="#services" className="hover:text-primary transition-colors">Услуги</a>
@@ -489,7 +489,7 @@ const Index = () => {
             <div className="animate-fade-in">
               <Icon name="Phone" className="text-primary mb-4 mx-auto" size={48} />
               <h4 className="text-xl font-semibold mb-2">Телефон</h4>
-              <p className="text-gray-600">+7 (495) 123-45-67</p>
+              <p className="text-gray-600">+7 (968) 522-72-72</p>
               <p className="text-sm text-gray-500">Круглосуточно</p>
             </div>
             <div className="animate-fade-in">
@@ -513,11 +513,11 @@ const Index = () => {
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Icon name="Car" className="text-primary" size={32} />
-            <h5 className="text-2xl font-bold">ЗооТакси</h5>
+            <h5 className="text-2xl font-bold">ЗооТакси ВетМастер</h5>
           </div>
           <p className="text-gray-400 mb-4">Безопасные поездки для ваших питомцев</p>
           <div className="flex justify-center space-x-6">
-            <a href="tel:+74951234567" className="hover:text-primary transition-colors">
+            <a href="tel:+79685227272" className="hover:text-primary transition-colors">
               <Icon name="Phone" size={20} />
             </a>
             <a href="mailto:info@zootaxi.ru" className="hover:text-primary transition-colors">
@@ -528,7 +528,7 @@ const Index = () => {
             </a>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-700 text-sm text-gray-400">
-            © 2024 ЗооТакси. Все права защищены.
+            © 2024 ЗооТакси ВетМастер. Все права защищены.
           </div>
         </div>
       </footer>
