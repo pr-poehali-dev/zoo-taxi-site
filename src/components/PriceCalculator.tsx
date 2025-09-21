@@ -37,11 +37,11 @@ const PriceCalculator = () => {
     switch (calc.tariff) {
       case 'economy':
         basePrice = 500;
-        pricePerKm = 25;
+        pricePerKm = 50;
         break;
       case 'comfort':
         basePrice = 800;
-        pricePerKm = 35;
+        pricePerKm = 50;
         break;
       case 'vip':
         basePrice = 1500;
