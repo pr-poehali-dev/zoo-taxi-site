@@ -8,7 +8,6 @@ import Icon from '@/components/ui/icon';
 
 interface CalculatorState {
   distance: number;
-  tariff: string;
   petSize: string;
   timeOfDay: string;
   isUrgent: boolean;
@@ -17,7 +16,6 @@ interface CalculatorState {
 const PriceCalculator = () => {
   const [calc, setCalc] = useState<CalculatorState>({
     distance: 0,
-    tariff: '',
     petSize: '',
     timeOfDay: '',
     isUrgent: false
@@ -26,28 +24,12 @@ const PriceCalculator = () => {
   const [estimatedPrice, setEstimatedPrice] = useState<number | null>(null);
 
   const calculatePrice = () => {
-    if (!calc.distance || !calc.tariff || !calc.petSize) {
+    if (!calc.distance || !calc.petSize) {
       return;
     }
 
-    let basePrice = 0;
-    let pricePerKm = 0;
-
-    // Базовые тарифы
-    switch (calc.tariff) {
-      case 'economy':
-        basePrice = 500;
-        pricePerKm = 50;
-        break;
-      case 'comfort':
-        basePrice = 800;
-        pricePerKm = 50;
-        break;
-      case 'vip':
-        basePrice = 1500;
-        pricePerKm = 50;
-        break;
-    }
+    const basePrice = 500; // Базовая стоимость подачи
+    const pricePerKm = 50; // Стоимость за км
 
     // Доплата за размер питомца
     let sizeMultiplier = 1;
@@ -117,18 +99,10 @@ const PriceCalculator = () => {
           />
         </div>
 
-        <div>
-          <Label htmlFor="tariff">Тариф</Label>
-          <Select onValueChange={(value) => handleInputChange('tariff', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Выберите тариф" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="economy">Эконом (от 500₽)</SelectItem>
-              <SelectItem value="comfort">Комфорт (от 800₽)</SelectItem>
-              <SelectItem value="vip">VIP (от 1500₽)</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="bg-blue-50 p-3 rounded-lg border">
+          <p className="text-sm text-gray-600 text-center">
+            Стоимость: <span className="font-bold text-primary">500₽ подача + 50₽/км</span>
+          </p>
         </div>
 
         <div>
