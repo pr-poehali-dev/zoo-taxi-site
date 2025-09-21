@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Icon from '@/components/ui/icon';
 import PriceCalculator from '@/components/PriceCalculator';
+import WhatsAppButton from '@/components/WhatsAppButton';
 
 interface BookingForm {
   petType: string;
@@ -81,9 +82,13 @@ const Index = () => {
                 <Icon name="Phone" size={20} className="mr-2" />
                 Заказать сейчас
               </Button>
-              <Button variant="outline" size="lg" className="animate-scale-in">
-                <Icon name="Play" size={20} className="mr-2" />
-                Как это работает
+              <Button 
+                size="lg" 
+                className="animate-scale-in bg-green-500 hover:bg-green-600 text-white"
+                onClick={() => window.open('https://wa.me/79685227272?text=Здравствуйте! Хочу заказать зоотакси для моего питомца', '_blank')}
+              >
+                <Icon name="MessageCircle" size={20} className="mr-2" />
+                WhatsApp
               </Button>
             </div>
           </div>
@@ -523,7 +528,12 @@ const Index = () => {
             <a href="mailto:info@zootaxi.ru" className="hover:text-primary transition-colors">
               <Icon name="Mail" size={20} />
             </a>
-            <a href="#" className="hover:text-primary transition-colors">
+            <a 
+              href="https://wa.me/79685227272?text=Здравствуйте! Хочу заказать зоотакси для моего питомца" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
               <Icon name="MessageCircle" size={20} />
             </a>
           </div>
@@ -532,6 +542,8 @@ const Index = () => {
           </div>
         </div>
       </footer>
+      
+      <WhatsAppButton />
     </div>
   );
 };
