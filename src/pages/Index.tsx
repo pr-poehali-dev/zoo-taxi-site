@@ -144,8 +144,128 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Advantages Section */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto">
+          <h3 className="text-3xl font-bold text-center mb-12">Почему выбирают нас</h3>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center animate-fade-in">
+              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Shield" className="text-primary" size={32} />
+              </div>
+              <h4 className="text-lg font-semibold mb-2">Безопасность</h4>
+              <p className="text-gray-600">Специально оборудованные автомобили с переносками и защитными барьерами</p>
+            </div>
+            <div className="text-center animate-fade-in">
+              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Clock" className="text-primary" size={32} />
+              </div>
+              <h4 className="text-lg font-semibold mb-2">Круглосуточно</h4>
+              <p className="text-gray-600">Работаем 24/7, включая выходные и праздники. Подача в течение 30 минут</p>
+            </div>
+            <div className="text-center animate-fade-in">
+              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="UserCheck" className="text-primary" size={32} />
+              </div>
+              <h4 className="text-lg font-semibold mb-2">Опыт</h4>
+              <p className="text-gray-600">Водители с опытом работы с животными и специальной подготовкой</p>
+            </div>
+            <div className="text-center animate-fade-in">
+              <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Icon name="Thermometer" className="text-primary" size={32} />
+              </div>
+              <h4 className="text-lg font-semibold mb-2">Комфорт</h4>
+              <p className="text-gray-600">Климат-контроль, мягкие переноски и минимум стресса для питомца</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="py-16 px-4 bg-gray-50">
+        <div className="container mx-auto">
+          <h3 className="text-3xl font-bold text-center mb-12">Отзывы клиентов</h3>
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            <Card className="animate-fade-in">
+              <CardContent className="p-6">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={20} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "Отличный сервис! Водитель приехал точно в назначенное время, кот Мурзик перенес поездку к ветеринару без стресса. Обязательно буду пользоваться еще!"
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
+                    <Icon name="User" size={20} />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Анна К.</p>
+                    <p className="text-sm text-gray-500">Владелец кота</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="animate-fade-in">
+              <CardContent className="p-6">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={20} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "Переезжали с собакой из одного конца города в другой. Все прошло идеально - собака была спокойна, водитель помог с переноской. Цены честные!"
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
+                    <Icon name="User" size={20} />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Михаил Д.</p>
+                    <p className="text-sm text-gray-500">Владелец собаки</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="animate-fade-in">
+              <CardContent className="p-6">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={20} />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4">
+                  "Срочно нужно было доставить кролика в ветклинику ночью. Приехали через 20 минут! Профессиональный подход и забота о животном на высоте."
+                </p>
+                <div className="flex items-center">
+                  <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
+                    <Icon name="User" size={20} />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Елена С.</p>
+                    <p className="text-sm text-gray-500">Владелец кролика</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="text-center mt-12">
+            <div className="bg-primary/10 inline-block px-6 py-3 rounded-lg">
+              <p className="text-primary font-semibold">
+                <Icon name="Star" className="inline mr-2" size={20} />
+                4.9/5 - средняя оценка (более 1000 поездок)
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Booking Section */}
-      <section id="booking" className="py-16 px-4 bg-gray-50">
+      <section id="booking" className="py-16 px-4 bg-white">
         <div className="container mx-auto max-w-2xl">
           <h3 className="text-3xl font-bold text-center mb-12">Заказать поездку</h3>
           <Card>
