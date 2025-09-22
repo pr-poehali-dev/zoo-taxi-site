@@ -28,7 +28,7 @@ const PriceCalculator = () => {
       return;
     }
 
-    const basePrice = 500; // Базовая стоимость подачи
+    const basePrice = 1000; // Базовая стоимость подачи
     const pricePerKm = 50; // Стоимость за км
 
     // Доплата за размер питомца
@@ -101,7 +101,8 @@ const PriceCalculator = () => {
 
         <div className="bg-blue-50 p-3 rounded-lg border">
           <p className="text-sm text-gray-600 text-center">
-            Стоимость: <span className="font-bold text-primary">500₽ подача + 50₽/км</span>
+            Стоимость: <span className="font-bold text-primary">1000₽ подача + 50₽/км</span><br/>
+            <span className="text-xs text-primary">Ожидание: 500₽ за каждые 15 минут</span>
           </p>
         </div>
 

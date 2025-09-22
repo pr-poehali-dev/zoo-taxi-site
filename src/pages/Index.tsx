@@ -56,6 +56,7 @@ const Index = () => {
             <div className="hidden md:flex space-x-6">
               <a href="#services" className="hover:text-primary transition-colors">Услуги</a>
               <a href="#pricing" className="hover:text-primary transition-colors">Стоимость</a>
+              <a href="#reviews" className="hover:text-primary transition-colors">Отзывы</a>
               <a href="#booking" className="hover:text-primary transition-colors">Заказать</a>
               <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
             </div>
@@ -198,7 +199,7 @@ const Index = () => {
           
           <div className="mt-16 animate-slide-up text-center">
             <img
-              src="/img/a2ad5d94-ce72-4edc-aa65-294ee1d96c14.jpg"
+              src="/img/713a5919-2214-4da4-9ae4-9f96a9b0faa3.jpg"
               alt="Зоотакси - безопасная перевозка питомцев"
               className="rounded-lg shadow-2xl mx-auto max-w-4xl w-full"
             />
@@ -292,7 +293,7 @@ const Index = () => {
       </section>
 
       {/* Reviews Section */}
-      <section className="py-16 px-4 bg-gray-50">
+      <section id="reviews" className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
           <h3 className="text-3xl font-bold text-center mb-12">Отзывы клиентов</h3>
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
