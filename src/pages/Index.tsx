@@ -56,6 +56,7 @@ const Index = () => {
             <div className="hidden md:flex space-x-6">
               <a href="#services" className="hover:text-primary transition-colors">Услуги</a>
               <a href="#pricing" className="hover:text-primary transition-colors">Стоимость</a>
+              <a href="#gallery" className="hover:text-primary transition-colors">Автопарк</a>
               <a href="#reviews" className="hover:text-primary transition-colors">Отзывы</a>
               <a href="#booking" className="hover:text-primary transition-colors">Заказать</a>
               <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
@@ -251,6 +252,81 @@ const Index = () => {
           {/* Price Calculator */}
           <div className="flex justify-center">
             <PriceCalculator />
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section id="gallery" className="py-16 px-4 bg-gray-50">
+        <div className="container mx-auto">
+          <h3 className="text-3xl font-bold text-center mb-12">Наш автопарк и оборудование</h3>
+          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Современные автомобили с климат-контролем и профессиональное оборудование для безопасной перевозки питомцев любых размеров
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow animate-fade-in">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img
+                  src="/img/6a017a0b-4a7a-4156-8f75-86fa168bc3aa.jpg"
+                  alt="Автомобиль зоотакси"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <CardContent className="p-4">
+                <h4 className="font-semibold text-lg mb-2">Современные автомобили</h4>
+                <p className="text-gray-600 text-sm">Чистые, комфортабельные автомобили с климат-контролем и системой очистки воздуха</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow animate-fade-in">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img
+                  src="/img/e05fbfdf-c42d-41d7-b83c-af2d5a7ef3cc.jpg"
+                  alt="Салон автомобиля для перевозки животных"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <CardContent className="p-4">
+                <h4 className="font-semibold text-lg mb-2">Оборудованный салон</h4>
+                <p className="text-gray-600 text-sm">Специально адаптированные салоны с креплениями для переносок и защитными барьерами</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow animate-fade-in">
+              <div className="aspect-[4/3] overflow-hidden">
+                <img
+                  src="/img/423b5e33-516c-453a-844e-c3f3b81594b2.jpg"
+                  alt="Переноски для животных"
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+              </div>
+              <CardContent className="p-4">
+                <h4 className="font-semibold text-lg mb-2">Переноски всех размеров</h4>
+                <p className="text-gray-600 text-sm">Профессиональные переноски от маленьких для птиц до больших для крупных собак</p>
+              </CardContent>
+            </Card>
+          </div>
+          
+          <div className="text-center mt-12">
+            <div className="grid md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <Icon name="Thermometer" className="text-primary mx-auto mb-2" size={32} />
+                <p className="font-semibold text-sm">Климат-контроль</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <Icon name="Shield" className="text-primary mx-auto mb-2" size={32} />
+                <p className="font-semibold text-sm">Безопасность</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <Icon name="Heart" className="text-primary mx-auto mb-2" size={32} />
+                <p className="font-semibold text-sm">Забота о питомцах</p>
+              </div>
+              <div className="bg-white p-4 rounded-lg shadow-sm">
+                <Icon name="CheckCircle" className="text-primary mx-auto mb-2" size={32} />
+                <p className="font-semibold text-sm">Проверенное оборудование</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
