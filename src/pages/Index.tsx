@@ -199,7 +199,7 @@ const Index = () => {
           
           <div className="mt-16 animate-slide-up text-center">
             <img
-              src="/img/713a5919-2214-4da4-9ae4-9f96a9b0faa3.jpg"
+              src="/img/f3f0bbce-15c9-47b5-8bd8-1deeae4b98a2.jpg"
               alt="Зоотакси - безопасная перевозка питомцев"
               className="rounded-lg shadow-2xl mx-auto max-w-4xl w-full"
             />
@@ -371,6 +371,66 @@ const Index = () => {
                 4.9/5 - средняя оценка (более 1000 поездок)
               </p>
             </div>
+          </div>
+
+          {/* Add Review Form */}
+          <div className="mt-16 max-w-2xl mx-auto">
+            <Card className="border-2 border-primary/20">
+              <CardHeader className="text-center">
+                <CardTitle className="text-2xl text-primary">Оставить отзыв</CardTitle>
+                <CardDescription>Поделитесь своим опытом использования зоотакси</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="review-name">Ваше имя</Label>
+                    <Input 
+                      id="review-name"
+                      placeholder="Как к вам обращаться?"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="review-pet">Питомец</Label>
+                    <Input 
+                      id="review-pet"
+                      placeholder="Кличка и тип питомца"
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <Label>Оценка</Label>
+                  <div className="flex gap-2 mt-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Icon 
+                        key={star}
+                        name="Star" 
+                        className="cursor-pointer text-gray-300 hover:text-yellow-400 transition-colors" 
+                        size={24}
+                      />
+                    ))}
+                  </div>
+                </div>
+                
+                <div>
+                  <Label htmlFor="review-text">Ваш отзыв</Label>
+                  <Textarea 
+                    id="review-text"
+                    placeholder="Расскажите о вашем опыте поездки с питомцем..."
+                    rows={4}
+                  />
+                </div>
+                
+                <Button 
+                  className="w-full" 
+                  size="lg"
+                  onClick={() => alert('Спасибо за отзыв! Мы опубликуем его после модерации.')}
+                >
+                  <Icon name="Send" size={20} className="mr-2" />
+                  Отправить отзыв
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
