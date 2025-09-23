@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -9,39 +9,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Icon from '@/components/ui/icon';
 import PriceCalculator from '@/components/PriceCalculator';
 import WhatsAppButton from '@/components/WhatsAppButton';
-
-interface BookingForm {
-  petType: string;
-  petName: string;
-  pickupAddress: string;
-  dropoffAddress: string;
-  date: string;
-  time: string;
-  phone: string;
-  notes: string;
-}
+import OrderForm from '@/components/OrderForm';
 
 const Index = () => {
-  const [bookingForm, setBookingForm] = useState<BookingForm>({
-    petType: '',
-    petName: '',
-    pickupAddress: '',
-    dropoffAddress: '',
-    date: '',
-    time: '',
-    phone: '',
-    notes: ''
-  });
-
-  const handleInputChange = (field: keyof BookingForm, value: string) => {
-    setBookingForm(prev => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log('Booking submitted:', bookingForm);
-    alert('Заявка отправлена! Мы свяжемся с вами в течение 10 минут.');
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
@@ -56,7 +26,7 @@ const Index = () => {
             <div className="hidden md:flex space-x-6">
               <a href="#services" className="hover:text-primary transition-colors">Услуги</a>
               <a href="#pricing" className="hover:text-primary transition-colors">Стоимость</a>
-              <a href="#gallery" className="hover:text-primary transition-colors">Автопарк</a>
+
               <a href="#reviews" className="hover:text-primary transition-colors">Отзывы</a>
               <a href="#booking" className="hover:text-primary transition-colors">Заказать</a>
               <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
@@ -257,53 +227,41 @@ const Index = () => {
       </section>
 
       {/* Gallery Section */}
-      <section id="gallery" className="py-16 px-4 bg-gray-50">
+      <section className="py-16 px-4 bg-gray-50">
         <div className="container mx-auto">
-          <h3 className="text-3xl font-bold text-center mb-12">Наш автопарк и оборудование</h3>
+          <h3 className="text-3xl font-bold text-center mb-12">Как мы перевозим ваших питомцев</h3>
           <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
-            Современные автомобили с климат-контролем и профессиональное оборудование для безопасной перевозки питомцев любых размеров
+            Каждое животное путешествует в комфортных и безопасных условиях, подходящих именно для его размера и характера
           </p>
           
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="max-w-4xl mx-auto">
             <Card className="overflow-hidden hover:shadow-lg transition-shadow animate-fade-in">
-              <div className="aspect-[4/3] overflow-hidden">
+              <div className="aspect-[16/10] overflow-hidden">
                 <img
-                  src="/img/6a017a0b-4a7a-4156-8f75-86fa168bc3aa.jpg"
-                  alt="Автомобиль зоотакси"
+                  src="/img/3b3afc5d-3b86-4e79-b119-1bc6b8f326a6.jpg"
+                  alt="Собака, кошка и кролик в багажнике автомобиля"
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <CardContent className="p-4">
-                <h4 className="font-semibold text-lg mb-2">Современные автомобили</h4>
-                <p className="text-gray-600 text-sm">Чистые, комфортабельные автомобили с климат-контролем и системой очистки воздуха</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow animate-fade-in">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src="/img/e05fbfdf-c42d-41d7-b83c-af2d5a7ef3cc.jpg"
-                  alt="Салон автомобиля для перевозки животных"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <CardContent className="p-4">
-                <h4 className="font-semibold text-lg mb-2">Оборудованный салон</h4>
-                <p className="text-gray-600 text-sm">Специально адаптированные салоны с креплениями для переносок и защитными барьерами</p>
-              </CardContent>
-            </Card>
-            
-            <Card className="overflow-hidden hover:shadow-lg transition-shadow animate-fade-in">
-              <div className="aspect-[4/3] overflow-hidden">
-                <img
-                  src="/img/423b5e33-516c-453a-844e-c3f3b81594b2.jpg"
-                  alt="Переноски для животных"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <CardContent className="p-4">
-                <h4 className="font-semibold text-lg mb-2">Переноски всех размеров</h4>
-                <p className="text-gray-600 text-sm">Профессиональные переноски от маленьких для птиц до больших для крупных собак</p>
+              <CardContent className="p-6">
+                <h4 className="font-semibold text-xl mb-4">Индивидуальный подход к каждому питомцу</h4>
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <Icon name="Dog" className="text-primary mx-auto mb-2" size={32} />
+                    <h5 className="font-semibold mb-2">Собаки</h5>
+                    <p className="text-gray-600 text-sm">Крупные собаки путешествуют свободно в просторном багажнике с нескользящим покрытием</p>
+                  </div>
+                  <div className="text-center">
+                    <Icon name="Cat" className="text-primary mx-auto mb-2" size={32} />
+                    <p className="font-semibold mb-2">Кошки</p>
+                    <p className="text-gray-600 text-sm">В удобных переносках с хорошей вентиляцией для снижения стресса</p>
+                  </div>
+                  <div className="text-center">
+                    <Icon name="Rabbit" className="text-primary mx-auto mb-2" size={32} />
+                    <p className="font-semibold mb-2">Мелкие питомцы</p>
+                    <p className="text-gray-600 text-sm">Кролики, птицы и хорьки в специальных переносках с мягкой подстилкой</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           </div>
@@ -513,129 +471,9 @@ const Index = () => {
 
       {/* Booking Section */}
       <section id="booking" className="py-16 px-4 bg-white">
-        <div className="container mx-auto max-w-2xl">
+        <div className="container mx-auto">
           <h3 className="text-3xl font-bold text-center mb-12">Заказать поездку</h3>
-          <Card>
-            <CardHeader>
-              <CardTitle>Форма заказа</CardTitle>
-              <CardDescription>
-                Заполните форму и мы свяжемся с вами в течение 10 минут
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="petType">Тип питомца</Label>
-                    <Select onValueChange={(value) => handleInputChange('petType', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Выберите" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="dog">Собака</SelectItem>
-                        <SelectItem value="cat">Кот/Кошка</SelectItem>
-                        <SelectItem value="bird">Птица</SelectItem>
-                        <SelectItem value="other">Другое</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div>
-                    <Label htmlFor="petName">Кличка питомца</Label>
-                    <Input
-                      id="petName"
-                      value={bookingForm.petName}
-                      onChange={(e) => handleInputChange('petName', e.target.value)}
-                      placeholder="Как зовут питомца"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="pickupAddress">Адрес подачи</Label>
-                  <Input
-                    id="pickupAddress"
-                    value={bookingForm.pickupAddress}
-                    onChange={(e) => handleInputChange('pickupAddress', e.target.value)}
-                    placeholder="Откуда забрать питомца"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="dropoffAddress">Адрес назначения</Label>
-                  <Input
-                    id="dropoffAddress"
-                    value={bookingForm.dropoffAddress}
-                    onChange={(e) => handleInputChange('dropoffAddress', e.target.value)}
-                    placeholder="Куда доставить питомца"
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="date">Дата</Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={bookingForm.date}
-                      onChange={(e) => handleInputChange('date', e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="time">Время</Label>
-                    <Select onValueChange={(value) => handleInputChange('time', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Выберите время" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="09:00">09:00</SelectItem>
-                        <SelectItem value="10:00">10:00</SelectItem>
-                        <SelectItem value="11:00">11:00</SelectItem>
-                        <SelectItem value="12:00">12:00</SelectItem>
-                        <SelectItem value="13:00">13:00</SelectItem>
-                        <SelectItem value="14:00">14:00</SelectItem>
-                        <SelectItem value="15:00">15:00</SelectItem>
-                        <SelectItem value="16:00">16:00</SelectItem>
-                        <SelectItem value="17:00">17:00</SelectItem>
-                        <SelectItem value="18:00">18:00</SelectItem>
-                        <SelectItem value="asap">Как можно скорее</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="phone">Телефон</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={bookingForm.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    placeholder="+7 (999) 123-45-67"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="notes">Дополнительные пожелания</Label>
-                  <Textarea
-                    id="notes"
-                    value={bookingForm.notes}
-                    onChange={(e) => handleInputChange('notes', e.target.value)}
-                    placeholder="Особенности характера питомца, специальные требования..."
-                    rows={3}
-                  />
-                </div>
-
-                <Button type="submit" className="w-full" size="lg">
-                  <Icon name="Send" className="mr-2" size={20} />
-                  Отправить заявку
-                </Button>
-              </form>
-            </CardContent>
-          </Card>
+          <OrderForm />
         </div>
       </section>
 
