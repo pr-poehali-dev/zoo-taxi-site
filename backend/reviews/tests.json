@@ -1,0 +1,92 @@
+{
+  "tests": [
+    {
+      "name": "Get all reviews",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "reviews": "array",
+        "total": "number",
+        "limit": "number",
+        "offset": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get published reviews only",
+      "method": "GET",
+      "path": "/?public_only=true&limit=10",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "reviews": "array",
+        "total": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get reviews with status filter",
+      "method": "GET",
+      "path": "/?status=featured",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "reviews": "array",
+        "total": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Create new review",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "client_name": "Тестовый Клиент",
+        "client_email": "test@example.com",
+        "rating": 5,
+        "title": "Отличный сервис!",
+        "content": "Очень доволен качеством услуг зоотакси. Рекомендую всем!",
+        "service_type": "к ветеринару",
+        "trip_date": "2024-09-20"
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "id": "number",
+        "message": "string",
+        "is_published": false
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Publish review",
+      "method": "PUT",
+      "path": "/",
+      "body": {
+        "id": 1,
+        "is_published": true
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "id": "number",
+        "is_published": true,
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Set review as featured",
+      "method": "PUT",
+      "path": "/",
+      "body": {
+        "id": 1,
+        "is_featured": true
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "id": "number",
+        "is_featured": true,
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

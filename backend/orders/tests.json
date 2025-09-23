@@ -1,0 +1,71 @@
+{
+  "tests": [
+    {
+      "name": "Get orders list",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "orders": "array",
+        "total": "number",
+        "limit": "number",
+        "offset": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get orders with status filter",
+      "method": "GET",
+      "path": "/?status=new&limit=10",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "orders": "array",
+        "total": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Create new order",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "client_name": "Тест Клиент",
+        "client_phone": "+7 (999) 123-45-67",
+        "client_email": "test@example.com",
+        "pet_name": "Тестовый питомец",
+        "pet_type": "кошка",
+        "pet_breed": "Британская",
+        "pet_weight": 4.5,
+        "service_type": "к ветеринару",
+        "pickup_address": "Тестовый адрес подачи",
+        "destination_address": "Тестовый адрес назначения",
+        "preferred_date": "2024-12-01",
+        "preferred_time": "14:00",
+        "comments": "Тестовый комментарий"
+      },
+      "expectedStatus": 201,
+      "expectedBody": {
+        "id": "number",
+        "message": "string",
+        "status": "new"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Update order status",
+      "method": "PUT",
+      "path": "/",
+      "body": {
+        "id": 1,
+        "status": "confirmed"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "id": "number",
+        "status": "string",
+        "message": "string"
+      },
+      "bodyMatcher": "partial"
+    }
+  ]
+}

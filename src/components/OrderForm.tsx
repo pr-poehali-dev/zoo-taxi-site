@@ -59,32 +59,60 @@ const OrderForm: React.FC = () => {
     setSubmitMessage('');
 
     try {
-      // Здесь будет отправка данных на сервер
-      // Пока просто имитируем отправку
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      setSubmitMessage('Ваша заявка успешно отправлена! Мы свяжемся с вами в течение 15 минут.');
-      
-      // Очищаем форму
-      setFormData({
-        clientName: '',
-        clientPhone: '',
-        clientEmail: '',
-        petName: '',
-        petType: '',
-        petBreed: '',
-        petWeight: '',
-        petSpecialNeeds: '',
-        serviceType: '',
-        pickupAddress: '',
-        destinationAddress: '',
-        preferredDate: '',
-        preferredTime: '',
-        additionalServices: '',
-        comments: ''
+      // Отправляем данные на backend
+      const response = await fetch('https://functions.poehali.dev/1c0b122d-a5b5-4727-aaa6-681c30e9f3f3', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          client_name: formData.clientName,
+          client_phone: formData.clientPhone,
+          client_email: formData.clientEmail,
+          pet_name: formData.petName,
+          pet_type: formData.petType,
+          pet_breed: formData.petBreed,
+          pet_weight: formData.petWeight ? parseFloat(formData.petWeight) : null,
+          pet_special_needs: formData.petSpecialNeeds,
+          service_type: formData.serviceType,
+          pickup_address: formData.pickupAddress,
+          destination_address: formData.destinationAddress,
+          preferred_date: formData.preferredDate,
+          preferred_time: formData.preferredTime,
+          additional_services: formData.additionalServices,
+          comments: formData.comments
+        })
       });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        setSubmitMessage('Ваша заявка успешно отправлена! Мы свяжемся с вами в течение 15 минут.');
+        
+        // Очищаем форму
+        setFormData({
+          clientName: '',
+          clientPhone: '',
+          clientEmail: '',
+          petName: '',
+          petType: '',
+          petBreed: '',
+          petWeight: '',
+          petSpecialNeeds: '',
+          serviceType: '',
+          pickupAddress: '',
+          destinationAddress: '',
+          preferredDate: '',
+          preferredTime: '',
+          additionalServices: '',
+          comments: ''
+        });
+      } else {
+        setSubmitMessage(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`);
+      }
     } catch (error) {
-      setSubmitMessage('Произошла ошибка при отправке заявки. Попробуйте еще раз или позвоните нам.');
+      console.error('Ошибка отправки заявки:', error);
+      setSubmitMessage('Произошла ошибка при отправке заявки. Проверьте интернет-соединение и попробуйте еще раз.');
     }
 
     setIsSubmitting(false);
