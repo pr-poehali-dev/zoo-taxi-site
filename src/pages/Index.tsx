@@ -31,9 +31,20 @@ const Index = () => {
               <a href="#booking" className="hover:text-primary transition-colors">Заказать</a>
               <a href="#contacts" className="hover:text-primary transition-colors">Контакты</a>
             </div>
-            <Button className="md:hidden">
-              <Icon name="Menu" size={20} />
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => window.location.href = '/admin'}
+                className="hidden sm:flex"
+              >
+                <Icon name="Settings" size={16} className="mr-1" />
+                Админ
+              </Button>
+              <Button className="md:hidden">
+                <Icon name="Menu" size={20} />
+              </Button>
+            </div>
           </nav>
         </div>
       </header>
