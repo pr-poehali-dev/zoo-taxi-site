@@ -608,7 +608,7 @@ const Index = () => {
         <div className="container mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Icon name="Car" className="text-primary" size={32} />
-            <h5 className="text-2xl font-bold">ЗооТакси УЮТ ВетМастер</h5>
+            <h5 className="text-2xl font-bold">ЗооТакси УЮТ</h5>
           </div>
           <p className="text-gray-400 mb-4">Безопасные поездки для ваших питомцев</p>
           <div className="flex justify-center space-x-6">
@@ -628,7 +628,7 @@ const Index = () => {
             </a>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-700 text-sm text-gray-400">
-            © 2024 ЗооТакси УЮТ ВетМастер. Все права защищены.
+            © 2024 ЗооТакси УЮТ. Все права защищены.
           </div>
         </div>
       </footer>
