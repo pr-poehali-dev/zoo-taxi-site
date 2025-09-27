@@ -66,117 +66,138 @@ const Admin: React.FC = () => {
   const loadData = async () => {
     setLoading(true);
     try {
-      // В реальном приложении здесь будут API вызовы
-      // Пока используем моковые данные для демонстрации
-      const mockOrders: Order[] = [
-        {
-          id: 1,
-          client_name: 'Анна Петрова',
-          client_phone: '+7 (916) 123-45-67',
-          client_email: 'anna@email.com',
-          pet_name: 'Мурка',
-          pet_type: 'кошка',
-          pet_breed: 'Британская',
-          pet_weight: 4.5,
-          service_type: 'к ветеринару',
-          pickup_address: 'ул. Тверская, 15',
-          destination_address: 'Ветклиника "Айболит", ул. Садовая, 8',
-          preferred_date: '2024-09-24',
-          preferred_time: '14:00',
-          comments: 'Кошка очень пугливая, нужна осторожность',
-          estimated_price: 800,
-          status: 'new',
-          created_at: '2024-09-23T10:30:00',
-          updated_at: '2024-09-23T10:30:00'
-        },
-        {
-          id: 2,
-          client_name: 'Михаил Соколов',
-          client_phone: '+7 (903) 987-65-43',
-          pet_name: 'Рекс',
-          pet_type: 'собака',
-          pet_breed: 'Немецкая овчарка',
-          pet_weight: 35,
-          service_type: 'экстренная помощь',
-          pickup_address: 'ул. Ленина, 42',
-          destination_address: '24-часовая ветклиника, проспект Мира, 100',
-          preferred_date: '2024-09-23',
-          preferred_time: '22:30',
-          additional_services: 'Помочь донести собаку',
-          comments: 'Собака не может ходить, травма лапы',
-          estimated_price: 1200,
-          status: 'confirmed',
-          created_at: '2024-09-23T22:15:00',
-          updated_at: '2024-09-23T22:20:00'
-        }
-      ];
-
-      const mockReviews: Review[] = [
-        {
-          id: 5,
-          client_name: 'Елена Васильева',
-          client_email: 'elena@email.com',
-          rating: 5,
-          title: 'Очень довольна!',
-          content: 'Отличный сервис! Водитель приехал вовремя, помог с переноской. Кот чувствовал себя комфортно. Рекомендую всем!',
-          service_type: 'к ветеринару',
-          trip_date: '2024-09-20',
-          is_published: false,
-          is_featured: false,
-          created_at: '2024-09-20T16:45:00',
-          updated_at: '2024-09-20T16:45:00'
-        },
-        {
-          id: 6,
-          client_name: 'Дмитрий Кузнецов',
-          rating: 4,
-          title: 'Хорошо, но есть замечания',
-          content: 'В целом все прошло хорошо. Немного опоздали, но предупредили заранее. Автомобиль чистый, водитель вежливый.',
-          service_type: 'в гостиницу',
-          trip_date: '2024-09-21',
-          is_published: false,
-          is_featured: false,
-          moderator_notes: 'Нужно уточнить про опоздание',
-          created_at: '2024-09-21T12:30:00',
-          updated_at: '2024-09-21T12:30:00'
-        }
-      ];
-
-      setOrders(mockOrders);
-      setReviews(mockReviews);
+      // Загружаем заявки из API
+      const ordersResponse = await fetch('https://functions.poehali.dev/1c0b122d-a5b5-4727-aaa6-681c30e9f3f3', {
+        method: 'GET'
+      });
+      
+      const ordersData = await ordersResponse.json();
+      
+      if (ordersResponse.ok) {
+        setOrders(ordersData.orders || []);
+      } else {
+        console.error('Ошибка загрузки заявок:', ordersData.error);
+        setOrders([]);
+      }
+      
+      // Загружаем отзывы из API
+      const reviewsResponse = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
+        method: 'GET'
+      });
+      
+      const reviewsData = await reviewsResponse.json();
+      
+      if (reviewsResponse.ok) {
+        setReviews(reviewsData.reviews || []);
+      } else {
+        console.error('Ошибка загрузки отзывов:', reviewsData.error);
+        setReviews([]);
+      }
     } catch (error) {
       console.error('Ошибка загрузки данных:', error);
     }
     setLoading(false);
   };
 
-  const updateOrderStatus = (orderId: number, newStatus: Order['status']) => {
-    setOrders(orders.map(order => 
-      order.id === orderId 
-        ? { ...order, status: newStatus, updated_at: new Date().toISOString() }
-        : order
-    ));
+  const updateOrderStatus = async (orderId: number, newStatus: Order['status']) => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/1c0b122d-a5b5-4727-aaa6-681c30e9f3f3', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          order_id: orderId,
+          status: newStatus
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        // Обновляем локальное состояние
+        setOrders(orders.map(order => 
+          order.id === orderId 
+            ? { ...order, status: newStatus, updated_at: new Date().toISOString() }
+            : order
+        ));
+      } else {
+        console.error('Ошибка обновления статуса заявки:', result.error);
+        alert('Ошибка обновления статуса заявки');
+      }
+    } catch (error) {
+      console.error('Ошибка сети при обновлении статуса:', error);
+      alert('Ошибка подключения к серверу');
+    }
   };
 
-  const publishReview = (reviewId: number, publish: boolean) => {
-    setReviews(reviews.map(review =>
-      review.id === reviewId
-        ? { 
-            ...review, 
-            is_published: publish, 
-            published_at: publish ? new Date().toISOString() : undefined,
-            updated_at: new Date().toISOString()
-          }
-        : review
-    ));
+  const publishReview = async (reviewId: number, publish: boolean) => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          review_id: reviewId,
+          is_published: publish
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        // Обновляем локальное состояние
+        setReviews(reviews.map(review =>
+          review.id === reviewId
+            ? { 
+                ...review, 
+                is_published: publish, 
+                published_at: publish ? new Date().toISOString() : undefined,
+                updated_at: new Date().toISOString()
+              }
+            : review
+        ));
+      } else {
+        console.error('Ошибка публикации отзыва:', result.error);
+        alert('Ошибка публикации отзыва');
+      }
+    } catch (error) {
+      console.error('Ошибка сети при публикации отзыва:', error);
+      alert('Ошибка подключения к серверу');
+    }
   };
 
-  const setFeaturedReview = (reviewId: number, featured: boolean) => {
-    setReviews(reviews.map(review =>
-      review.id === reviewId
-        ? { ...review, is_featured: featured, updated_at: new Date().toISOString() }
-        : review
-    ));
+  const setFeaturedReview = async (reviewId: number, featured: boolean) => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          review_id: reviewId,
+          is_featured: featured
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        // Обновляем локальное состояние
+        setReviews(reviews.map(review =>
+          review.id === reviewId
+            ? { ...review, is_featured: featured, updated_at: new Date().toISOString() }
+            : review
+        ));
+      } else {
+        console.error('Ошибка обновления статуса рекомендуемого:', result.error);
+        alert('Ошибка обновления статуса рекомендуемого отзыва');
+      }
+    } catch (error) {
+      console.error('Ошибка сети при обновлении рекомендуемого:', error);
+      alert('Ошибка подключения к серверу');
+    }
   };
 
   const getStatusBadge = (status: Order['status']) => {
