@@ -266,7 +266,7 @@ const Admin: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <Icon name="Shield" className="text-primary" size={32} />
-              <h1 className="text-2xl font-bold">Админ панель ЗооТакси</h1>
+              <h1 className="text-2xl font-bold">Админ панель ЗооТакси УЮТ</h1>
             </div>
             <Button variant="outline" onClick={() => window.location.href = '/'}>
               <Icon name="Home" size={16} className="mr-2" />
