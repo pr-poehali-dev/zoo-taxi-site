@@ -7,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import Icon from '@/components/ui/icon';
-import PriceCalculator from '@/components/PriceCalculator';
+
 import WhatsAppButton from '@/components/WhatsAppButton';
 import OrderForm from '@/components/OrderForm';
 
@@ -25,7 +25,6 @@ const Index = () => {
             </div>
             <div className="hidden md:flex space-x-6">
               <a href="#services" className="hover:text-primary transition-colors">Услуги</a>
-              <a href="#pricing" className="hover:text-primary transition-colors">Стоимость</a>
 
               <a href="#reviews" className="hover:text-primary transition-colors">Отзывы</a>
               <a href="#booking" className="hover:text-primary transition-colors">Заказать</a>
@@ -221,18 +220,6 @@ const Index = () => {
                 <p>Доставка в аэропорт и встреча с соблюдением всех требований</p>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-16 px-4">
-        <div className="container mx-auto">
-          <h3 className="text-3xl font-bold text-center mb-12">Рассчитать стоимость</h3>
-          
-          {/* Price Calculator */}
-          <div className="flex justify-center">
-            <PriceCalculator />
           </div>
         </div>
       </section>
