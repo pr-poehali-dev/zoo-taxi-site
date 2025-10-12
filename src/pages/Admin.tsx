@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
 import Icon from '@/components/ui/icon';
 
 interface Order {
@@ -49,6 +50,7 @@ interface Review {
 }
 
 const Admin: React.FC = () => {
+  const { toast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
@@ -121,13 +123,34 @@ const Admin: React.FC = () => {
             ? { ...order, status: newStatus, updated_at: new Date().toISOString() }
             : order
         ));
+        
+        const statusLabels: Record<Order['status'], string> = {
+          new: 'новая',
+          confirmed: 'подтверждена',
+          in_progress: 'в работе',
+          completed: 'завершена',
+          cancelled: 'отменена'
+        };
+        
+        toast({
+          title: 'Статус обновлен',
+          description: `Заявка #${orderId} теперь ${statusLabels[newStatus]}`,
+        });
       } else {
         console.error('Ошибка обновления статуса заявки:', result.error);
-        alert('Ошибка обновления статуса заявки');
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось обновить статус заявки',
+          variant: 'destructive',
+        });
       }
     } catch (error) {
       console.error('Ошибка сети при обновлении статуса:', error);
-      alert('Ошибка подключения к серверу');
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -158,13 +181,26 @@ const Admin: React.FC = () => {
               }
             : review
         ));
+        
+        toast({
+          title: publish ? 'Отзыв опубликован' : 'Отзыв скрыт',
+          description: `Отзыв #${reviewId} ${publish ? 'теперь виден всем' : 'скрыт с сайта'}`,
+        });
       } else {
         console.error('Ошибка публикации отзыва:', result.error);
-        alert('Ошибка публикации отзыва');
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось изменить статус отзыва',
+          variant: 'destructive',
+        });
       }
     } catch (error) {
       console.error('Ошибка сети при публикации отзыва:', error);
-      alert('Ошибка подключения к серверу');
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
     }
   };
 
@@ -190,13 +226,26 @@ const Admin: React.FC = () => {
             ? { ...review, is_featured: featured, updated_at: new Date().toISOString() }
             : review
         ));
+        
+        toast({
+          title: featured ? 'Добавлен в рекомендуемые' : 'Убран из рекомендуемых',
+          description: `Отзыв #${reviewId} обновлен`,
+        });
       } else {
         console.error('Ошибка обновления статуса рекомендуемого:', result.error);
-        alert('Ошибка обновления статуса рекомендуемого отзыва');
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось обновить статус отзыва',
+          variant: 'destructive',
+        });
       }
     } catch (error) {
       console.error('Ошибка сети при обновлении рекомендуемого:', error);
-      alert('Ошибка подключения к серверу');
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
     }
   };
 
