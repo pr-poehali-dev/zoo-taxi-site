@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
 import Icon from '@/components/ui/icon';
 
 interface OrderFormData {
@@ -24,6 +25,7 @@ interface OrderFormData {
 }
 
 const OrderForm: React.FC = () => {
+  const { toast } = useToast();
   const [formData, setFormData] = useState<OrderFormData>({
     clientName: '',
     clientPhone: '',
@@ -43,7 +45,6 @@ const OrderForm: React.FC = () => {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitMessage, setSubmitMessage] = useState('');
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -56,10 +57,8 @@ const OrderForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitMessage('');
 
     try {
-      // Отправляем данные на backend
       const response = await fetch('https://functions.poehali.dev/1c0b122d-a5b5-4727-aaa6-681c30e9f3f3', {
         method: 'POST',
         headers: {
@@ -87,9 +86,12 @@ const OrderForm: React.FC = () => {
       const result = await response.json();
 
       if (response.ok) {
-        setSubmitMessage('Ваша заявка успешно отправлена! Мы свяжемся с вами в течение 15 минут.');
+        toast({
+          title: '✅ Заявка успешно отправлена!',
+          description: 'Мы свяжемся с вами в течение 15 минут для подтверждения заказа.',
+          duration: 5000,
+        });
         
-        // Очищаем форму
         setFormData({
           clientName: '',
           clientPhone: '',
@@ -108,11 +110,21 @@ const OrderForm: React.FC = () => {
           comments: ''
         });
       } else {
-        setSubmitMessage(`Ошибка: ${result.error || 'Не удалось отправить заявку'}`);
+        toast({
+          title: 'Ошибка отправки',
+          description: result.error || 'Не удалось отправить заявку. Попробуйте еще раз.',
+          variant: 'destructive',
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error('Ошибка отправки заявки:', error);
-      setSubmitMessage('Произошла ошибка при отправке заявки. Проверьте интернет-соединение и попробуйте еще раз.');
+      toast({
+        title: 'Ошибка сети',
+        description: 'Проверьте интернет-соединение и попробуйте еще раз.',
+        variant: 'destructive',
+        duration: 5000,
+      });
     }
 
     setIsSubmitting(false);
@@ -131,16 +143,6 @@ const OrderForm: React.FC = () => {
       </CardHeader>
       
       <CardContent>
-        {submitMessage && (
-          <div className={`p-4 rounded-lg mb-6 ${
-            submitMessage.includes('успешно') 
-              ? 'bg-green-50 text-green-800 border border-green-200' 
-              : 'bg-red-50 text-red-800 border border-red-200'
-          }`}>
-            {submitMessage}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Контактная информация */}
           <div className="grid md:grid-cols-2 gap-4">
