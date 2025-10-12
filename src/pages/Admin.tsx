@@ -422,7 +422,7 @@ const Admin: React.FC = () => {
     }
   };
 
-  const setFeaturedReview = async (reviewId: number, featured: boolean) => {"}
+  const setFeaturedReview = async (reviewId: number, featured: boolean) => {
     try {
       const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
         method: 'PUT',
