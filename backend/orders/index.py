@@ -233,6 +233,44 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 })
             }
         
+        elif method == 'DELETE':
+            # Удаление заявки
+            query_params = event.get('queryStringParameters') or {}
+            order_id = query_params.get('id')
+            
+            if not order_id:
+                return {
+                    'statusCode': 400,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'isBase64Encoded': False,
+                    'body': json.dumps({'error': 'ID заявки обязателен'})
+                }
+            
+            # Удаляем заявку
+            delete_query = "DELETE FROM orders WHERE id = %s RETURNING id"
+            cursor.execute(delete_query, [order_id])
+            result = cursor.fetchone()
+            
+            if not result:
+                return {
+                    'statusCode': 404,
+                    'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                    'isBase64Encoded': False,
+                    'body': json.dumps({'error': 'Заявка не найдена'})
+                }
+            
+            conn.commit()
+            
+            return {
+                'statusCode': 200,
+                'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                'isBase64Encoded': False,
+                'body': json.dumps({
+                    'id': result[0],
+                    'message': 'Заявка успешно удалена'
+                })
+            }
+        
         else:
             return {
                 'statusCode': 405,

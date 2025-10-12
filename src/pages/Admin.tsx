@@ -6,6 +6,17 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/components/ui/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 import Icon from '@/components/ui/icon';
 
 interface Order {
@@ -56,6 +67,8 @@ const Admin: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [orderToDelete, setOrderToDelete] = useState<number | null>(null);
+  const [reviewToDelete, setReviewToDelete] = useState<number | null>(null);
 
   // Фильтры
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
@@ -99,6 +112,70 @@ const Admin: React.FC = () => {
       console.error('Ошибка загрузки данных:', error);
     }
     setLoading(false);
+  };
+
+  const deleteOrder = async (orderId: number) => {
+    try {
+      const response = await fetch(`https://functions.poehali.dev/1c0b122d-a5b5-4727-aaa6-681c30e9f3f3?id=${orderId}`, {
+        method: 'DELETE'
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        setOrders(orders.filter(order => order.id !== orderId));
+        toast({
+          title: 'Заявка удалена',
+          description: `Заявка #${orderId} успешно удалена`,
+        });
+      } else {
+        console.error('Ошибка удаления заявки:', result.error);
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось удалить заявку',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка сети при удалении заявки:', error);
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const deleteReview = async (reviewId: number) => {
+    try {
+      const response = await fetch(`https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed?id=${reviewId}`, {
+        method: 'DELETE'
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        setReviews(reviews.filter(review => review.id !== reviewId));
+        toast({
+          title: 'Отзыв удален',
+          description: `Отзыв #${reviewId} успешно удален`,
+        });
+      } else {
+        console.error('Ошибка удаления отзыва:', result.error);
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось удалить отзыв',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка сети при удалении отзыва:', error);
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
+    }
   };
 
   const updateOrderStatus = async (orderId: number, newStatus: Order['status']) => {
@@ -504,6 +581,31 @@ const Admin: React.FC = () => {
                                 Завершить
                               </Button>
                             )}
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button 
+                                  size="sm" 
+                                  variant="destructive"
+                                >
+                                  <Icon name="Trash2" size={14} className="mr-1" />
+                                  Удалить
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Удалить заявку?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Вы уверены, что хотите удалить заявку #{order.id} от {order.client_name}? Это действие нельзя отменить.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Отмена</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deleteOrder(order.id)}>
+                                    Удалить
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </div>
                         </div>
                       </CardContent>
@@ -624,6 +726,31 @@ const Admin: React.FC = () => {
                               <Icon name="Star" size={14} className="mr-1" />
                               {review.is_featured ? 'Убрать из рек.' : 'В рекомендуемые'}
                             </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button 
+                                  size="sm" 
+                                  variant="destructive"
+                                >
+                                  <Icon name="Trash2" size={14} className="mr-1" />
+                                  Удалить
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Удалить отзыв?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Вы уверены, что хотите удалить отзыв от {review.client_name}? Это действие нельзя отменить.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Отмена</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deleteReview(review.id)}>
+                                    Удалить
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
                           </div>
                         </div>
                       </CardContent>
