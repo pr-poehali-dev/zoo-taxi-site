@@ -92,6 +92,41 @@ const OrderForm: React.FC = () => {
           duration: 5000,
         });
         
+        // Отправка уведомлений
+        const notificationSettings = localStorage.getItem('notifications');
+        if (notificationSettings) {
+          const settings = JSON.parse(notificationSettings);
+          if (settings.telegram_enabled || settings.email_enabled) {
+            try {
+              await fetch('https://functions.poehali.dev/813696b0-7f90-461f-aa2b-592da785321d', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  order: {
+                    id: result.order?.id,
+                    client_name: formData.clientName,
+                    client_phone: formData.clientPhone,
+                    pet_name: formData.petName,
+                    pet_type: formData.petType,
+                    service_type: formData.serviceType,
+                    pickup_address: formData.pickupAddress,
+                    destination_address: formData.destinationAddress,
+                    preferred_date: formData.preferredDate,
+                    preferred_time: formData.preferredTime,
+                    estimated_price: result.order?.estimated_price,
+                    comments: formData.comments
+                  },
+                  settings: settings
+                })
+              });
+            } catch (notifError) {
+              console.error('Notification error:', notifError);
+            }
+          }
+        }
+        
         setFormData({
           clientName: '',
           clientPhone: '',

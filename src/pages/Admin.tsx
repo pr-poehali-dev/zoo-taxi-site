@@ -85,6 +85,13 @@ const Admin: React.FC = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [contacts, setContacts] = useState({ phone: '79685227272', telegram: 'zootaxi_uyut', whatsapp: '79685227272' });
   const [editingContacts, setEditingContacts] = useState(false);
+  const [notifications, setNotifications] = useState({ 
+    telegram_enabled: false, 
+    telegram_chat_id: '', 
+    email_enabled: false, 
+    notification_email: '' 
+  });
+  const [editingNotifications, setEditingNotifications] = useState(false);
 
   // Фильтры
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
@@ -97,6 +104,10 @@ const Admin: React.FC = () => {
     const savedContacts = localStorage.getItem('contacts');
     if (savedContacts) {
       setContacts(JSON.parse(savedContacts));
+    }
+    const savedNotifications = localStorage.getItem('notifications');
+    if (savedNotifications) {
+      setNotifications(JSON.parse(savedNotifications));
     }
   }, []);
 
@@ -716,7 +727,7 @@ const Admin: React.FC = () => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="orders">
               <Icon name="Car" size={16} className="mr-2" />
               Заявки ({orders.length})
@@ -732,6 +743,10 @@ const Admin: React.FC = () => {
             <TabsTrigger value="contacts">
               <Icon name="Phone" size={16} className="mr-2" />
               Контакты
+            </TabsTrigger>
+            <TabsTrigger value="notifications">
+              <Icon name="Bell" size={16} className="mr-2" />
+              Уведомления
             </TabsTrigger>
           </TabsList>
 
@@ -1339,6 +1354,190 @@ const Admin: React.FC = () => {
                     <p className="text-gray-500">Галерея пуста. Добавьте первое фото!</p>
                   </div>
                 )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Notifications Tab */}
+          <TabsContent value="notifications">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="Bell" size={24} />
+                  Настройка уведомлений
+                </CardTitle>
+                <CardDescription>Получайте мгновенные уведомления о новых заявках</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {editingNotifications ? (
+                    <div className="space-y-6">
+                      {/* Telegram Settings */}
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center gap-3 mb-4">
+                          <Icon name="Send" className="text-[#0088cc]" size={24} />
+                          <h3 className="text-lg font-semibold">Telegram уведомления</h3>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              id="telegram_enabled"
+                              checked={notifications.telegram_enabled}
+                              onChange={(e) => setNotifications({...notifications, telegram_enabled: e.target.checked})}
+                              className="w-4 h-4"
+                            />
+                            <label htmlFor="telegram_enabled" className="text-sm font-medium">
+                              Включить уведомления в Telegram
+                            </label>
+                          </div>
+                          
+                          {notifications.telegram_enabled && (
+                            <div>
+                              <label className="block text-sm font-medium mb-2">
+                                Chat ID для получения уведомлений
+                              </label>
+                              <Input
+                                placeholder="123456789"
+                                value={notifications.telegram_chat_id}
+                                onChange={(e) => setNotifications({...notifications, telegram_chat_id: e.target.value})}
+                              />
+                              <p className="text-xs text-gray-500 mt-1">
+                                Чтобы узнать Chat ID: напишите боту @userinfobot в Telegram
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Email Settings */}
+                      <div className="p-4 border rounded-lg">
+                        <div className="flex items-center gap-3 mb-4">
+                          <Icon name="Mail" className="text-primary" size={24} />
+                          <h3 className="text-lg font-semibold">Email уведомления</h3>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              id="email_enabled"
+                              checked={notifications.email_enabled}
+                              onChange={(e) => setNotifications({...notifications, email_enabled: e.target.checked})}
+                              className="w-4 h-4"
+                            />
+                            <label htmlFor="email_enabled" className="text-sm font-medium">
+                              Включить уведомления на Email
+                            </label>
+                          </div>
+                          
+                          {notifications.email_enabled && (
+                            <div>
+                              <label className="block text-sm font-medium mb-2">
+                                Email для получения уведомлений
+                              </label>
+                              <Input
+                                type="email"
+                                placeholder="your-email@example.com"
+                                value={notifications.notification_email}
+                                onChange={(e) => setNotifications({...notifications, notification_email: e.target.value})}
+                              />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button onClick={() => {
+                          localStorage.setItem('notifications', JSON.stringify(notifications));
+                          setEditingNotifications(false);
+                          toast({
+                            title: 'Настройки сохранены',
+                            description: 'Уведомления будут отправляться при новых заявках',
+                          });
+                        }}>
+                          <Icon name="Save" size={16} className="mr-2" />
+                          Сохранить
+                        </Button>
+                        <Button variant="outline" onClick={() => setEditingNotifications(false)}>
+                          Отмена
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="grid md:grid-cols-2 gap-6">
+                        <Card>
+                          <CardContent className="p-6">
+                            <div className="flex items-start gap-3">
+                              <Icon name="Send" className={notifications.telegram_enabled ? "text-[#0088cc]" : "text-gray-400"} size={24} />
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between mb-2">
+                                  <p className="font-semibold">Telegram</p>
+                                  {notifications.telegram_enabled ? (
+                                    <Badge className="bg-green-100 text-green-800">Включено</Badge>
+                                  ) : (
+                                    <Badge className="bg-gray-100 text-gray-800">Выключено</Badge>
+                                  )}
+                                </div>
+                                {notifications.telegram_enabled && notifications.telegram_chat_id && (
+                                  <p className="text-sm text-gray-600">Chat ID: {notifications.telegram_chat_id}</p>
+                                )}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card>
+                          <CardContent className="p-6">
+                            <div className="flex items-start gap-3">
+                              <Icon name="Mail" className={notifications.email_enabled ? "text-primary" : "text-gray-400"} size={24} />
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between mb-2">
+                                  <p className="font-semibold">Email</p>
+                                  {notifications.email_enabled ? (
+                                    <Badge className="bg-green-100 text-green-800">Включено</Badge>
+                                  ) : (
+                                    <Badge className="bg-gray-100 text-gray-800">Выключено</Badge>
+                                  )}
+                                </div>
+                                {notifications.email_enabled && notifications.notification_email && (
+                                  <p className="text-sm text-gray-600">{notifications.notification_email}</p>
+                                )}
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      
+                      <Button onClick={() => setEditingNotifications(true)}>
+                        <Icon name="Edit" size={16} className="mr-2" />
+                        Изменить настройки
+                      </Button>
+                      
+                      <div className="mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <h4 className="font-semibold mb-2 flex items-center gap-2">
+                          <Icon name="AlertCircle" size={18} className="text-yellow-600" />
+                          Требуется настройка секретов
+                        </h4>
+                        <p className="text-sm text-gray-700 mb-3">
+                          Для работы уведомлений необходимо добавить секреты в проекте:
+                        </p>
+                        <ul className="text-sm text-gray-700 space-y-1 ml-6 list-disc">
+                          <li><strong>TELEGRAM_BOT_TOKEN</strong> - получите у @BotFather в Telegram</li>
+                          <li><strong>SMTP_HOST</strong> - адрес почтового сервера (smtp.gmail.com, smtp.yandex.ru)</li>
+                          <li><strong>SMTP_PORT</strong> - порт сервера (обычно 587)</li>
+                          <li><strong>SMTP_USER</strong> - ваш email адрес</li>
+                          <li><strong>SMTP_PASSWORD</strong> - пароль (для Gmail используйте App Password)</li>
+                        </ul>
+                        <p className="text-xs text-gray-500 mt-3">
+                          Секреты добавляются через панель проекта в настройках безопасности
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
           </TabsContent>
