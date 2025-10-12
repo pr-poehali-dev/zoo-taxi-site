@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -12,6 +12,52 @@ import WhatsAppButton from '@/components/WhatsAppButton';
 import OrderForm from '@/components/OrderForm';
 
 const Index = () => {
+  const [reviewName, setReviewName] = useState('');
+  const [reviewPet, setReviewPet] = useState('');
+  const [reviewRating, setReviewRating] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+
+  const handleSubmitReview = async () => {
+    if (!reviewName || !reviewRating || !reviewText) {
+      alert('Пожалуйста, заполните все обязательные поля');
+      return;
+    }
+
+    setReviewSubmitting(true);
+
+    try {
+      const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          client_name: reviewName,
+          rating: reviewRating,
+          content: reviewText,
+          title: reviewPet ? `Отзыв от владельца ${reviewPet}` : 'Отзыв клиента'
+        })
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        alert('Спасибо за отзыв! Мы опубликуем его после модерации.');
+        setReviewName('');
+        setReviewPet('');
+        setReviewRating(0);
+        setReviewText('');
+      } else {
+        alert('Ошибка: ' + (result.error || 'Не удалось отправить отзыв'));
+      }
+    } catch (error) {
+      console.error('Ошибка отправки отзыва:', error);
+      alert('Ошибка подключения к серверу');
+    } finally {
+      setReviewSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
@@ -419,6 +465,8 @@ const Index = () => {
                     <Input 
                       id="review-name"
                       placeholder="Как к вам обращаться?"
+                      value={reviewName}
+                      onChange={(e) => setReviewName(e.target.value)}
                     />
                   </div>
                   <div>
@@ -426,6 +474,8 @@ const Index = () => {
                     <Input 
                       id="review-pet"
                       placeholder="Кличка и тип питомца"
+                      value={reviewPet}
+                      onChange={(e) => setReviewPet(e.target.value)}
                     />
                   </div>
                 </div>
@@ -437,8 +487,13 @@ const Index = () => {
                       <Icon 
                         key={star}
                         name="Star" 
-                        className="cursor-pointer text-gray-300 hover:text-yellow-400 transition-colors" 
+                        className={`cursor-pointer transition-colors ${
+                          star <= reviewRating 
+                            ? 'text-yellow-400 fill-current' 
+                            : 'text-gray-300 hover:text-yellow-400'
+                        }`}
                         size={24}
+                        onClick={() => setReviewRating(star)}
                       />
                     ))}
                   </div>
@@ -450,16 +505,19 @@ const Index = () => {
                     id="review-text"
                     placeholder="Расскажите о вашем опыте поездки с питомцем..."
                     rows={4}
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
                   />
                 </div>
                 
                 <Button 
                   className="w-full" 
                   size="lg"
-                  onClick={() => alert('Спасибо за отзыв! Мы опубликуем его после модерации.')}
+                  onClick={handleSubmitReview}
+                  disabled={reviewSubmitting}
                 >
                   <Icon name="Send" size={20} className="mr-2" />
-                  Отправить отзыв
+                  {reviewSubmitting ? 'Отправка...' : 'Отправить отзыв'}
                 </Button>
               </CardContent>
             </Card>
