@@ -268,10 +268,20 @@ const Admin: React.FC = () => {
               <Icon name="Shield" className="text-primary" size={32} />
               <h1 className="text-2xl font-bold">Админ панель ЗооТакси УЮТ</h1>
             </div>
-            <Button variant="outline" onClick={() => window.location.href = '/'}>
-              <Icon name="Home" size={16} className="mr-2" />
-              На главную
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                onClick={loadData}
+                disabled={loading}
+              >
+                <Icon name="RefreshCw" size={16} className="mr-2" />
+                Обновить
+              </Button>
+              <Button variant="outline" onClick={() => window.location.href = '/'}>
+                <Icon name="Home" size={16} className="mr-2" />
+                На главную
+              </Button>
+            </div>
           </div>
         </div>
       </header>
