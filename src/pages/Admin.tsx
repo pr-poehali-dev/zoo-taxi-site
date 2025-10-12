@@ -73,6 +73,8 @@ const Admin: React.FC = () => {
   // Фильтры
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
   const [reviewStatusFilter, setReviewStatusFilter] = useState<string>('all');
+  const [orderSearchQuery, setOrderSearchQuery] = useState<string>('');
+  const [reviewSearchQuery, setReviewSearchQuery] = useState<string>('');
 
   useEffect(() => {
     loadData();
@@ -361,16 +363,29 @@ const Admin: React.FC = () => {
     ));
   };
 
-  const filteredOrders = orders.filter(order => 
-    orderStatusFilter === 'all' || order.status === orderStatusFilter
-  );
+  const filteredOrders = orders.filter(order => {
+    const matchesStatus = orderStatusFilter === 'all' || order.status === orderStatusFilter;
+    const matchesSearch = orderSearchQuery === '' || 
+      order.client_name.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
+      order.client_phone.includes(orderSearchQuery) ||
+      order.pet_name?.toLowerCase().includes(orderSearchQuery.toLowerCase()) ||
+      order.id.toString().includes(orderSearchQuery);
+    return matchesStatus && matchesSearch;
+  });
 
   const filteredReviews = reviews.filter(review => {
-    if (reviewStatusFilter === 'all') return true;
-    if (reviewStatusFilter === 'published') return review.is_published;
-    if (reviewStatusFilter === 'unpublished') return !review.is_published;
-    if (reviewStatusFilter === 'featured') return review.is_featured;
-    return true;
+    let matchesStatus = true;
+    if (reviewStatusFilter === 'published') matchesStatus = review.is_published;
+    else if (reviewStatusFilter === 'unpublished') matchesStatus = !review.is_published;
+    else if (reviewStatusFilter === 'featured') matchesStatus = review.is_featured;
+    
+    const matchesSearch = reviewSearchQuery === '' ||
+      review.client_name.toLowerCase().includes(reviewSearchQuery.toLowerCase()) ||
+      review.content.toLowerCase().includes(reviewSearchQuery.toLowerCase()) ||
+      review.title?.toLowerCase().includes(reviewSearchQuery.toLowerCase()) ||
+      review.id.toString().includes(reviewSearchQuery);
+    
+    return matchesStatus && matchesSearch;
   });
 
   if (loading) {
@@ -493,6 +508,15 @@ const Admin: React.FC = () => {
                     <CardDescription>Управление заказами клиентов</CardDescription>
                   </div>
                   <div className="flex gap-2">
+                    <div className="relative">
+                      <Icon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                      <Input
+                        placeholder="Поиск по имени, телефону, ID..."
+                        value={orderSearchQuery}
+                        onChange={(e) => setOrderSearchQuery(e.target.value)}
+                        className="pl-10 w-64"
+                      />
+                    </div>
                     <select 
                       value={orderStatusFilter} 
                       onChange={(e) => setOrderStatusFilter(e.target.value)}
@@ -633,6 +657,15 @@ const Admin: React.FC = () => {
                     <CardDescription>Модерация и публикация отзывов</CardDescription>
                   </div>
                   <div className="flex gap-2">
+                    <div className="relative">
+                      <Icon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+                      <Input
+                        placeholder="Поиск по имени, тексту, ID..."
+                        value={reviewSearchQuery}
+                        onChange={(e) => setReviewSearchQuery(e.target.value)}
+                        className="pl-10 w-64"
+                      />
+                    </div>
                     <select 
                       value={reviewStatusFilter} 
                       onChange={(e) => setReviewStatusFilter(e.target.value)}
