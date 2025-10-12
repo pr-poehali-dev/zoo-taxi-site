@@ -1,0 +1,23 @@
+{
+  "tests": [
+    {
+      "name": "Get all passengers",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Add new passenger",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "pet_name": "Барсик",
+        "pet_type": "Кошка",
+        "photo_url": "https://example.com/photo.jpg",
+        "description": "Милый котик",
+        "is_published": true
+      },
+      "expectedStatus": 201
+    }
+  ]
+}

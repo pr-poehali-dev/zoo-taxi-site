@@ -60,15 +60,28 @@ interface Review {
   updated_at: string;
 }
 
+interface Passenger {
+  id: number;
+  pet_name?: string;
+  pet_type?: string;
+  photo_url: string;
+  description?: string;
+  is_published: boolean;
+  created_at: string;
+}
+
 const Admin: React.FC = () => {
   const { toast } = useToast();
   const [orders, setOrders] = useState<Order[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [passengers, setPassengers] = useState<Passenger[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [orderToDelete, setOrderToDelete] = useState<number | null>(null);
   const [reviewToDelete, setReviewToDelete] = useState<number | null>(null);
+  const [newPassenger, setNewPassenger] = useState({ pet_name: '', pet_type: '', photo_url: '', description: '' });
+  const [isAddingPassenger, setIsAddingPassenger] = useState(false);
 
   // Фильтры
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
@@ -109,6 +122,17 @@ const Admin: React.FC = () => {
       } else {
         console.error('Ошибка загрузки отзывов:', reviewsData.error);
         setReviews([]);
+      }
+      
+      // Загружаем галерею
+      const passengersResponse = await fetch('https://functions.poehali.dev/9b67e555-8059-4828-adf9-09677d9dacd0');
+      const passengersData = await passengersResponse.json();
+      
+      if (passengersResponse.ok) {
+        setPassengers(passengersData || []);
+      } else {
+        console.error('Ошибка загрузки галереи:', passengersData.error);
+        setPassengers([]);
       }
     } catch (error) {
       console.error('Ошибка загрузки данных:', error);
@@ -283,7 +307,122 @@ const Admin: React.FC = () => {
     }
   };
 
-  const setFeaturedReview = async (reviewId: number, featured: boolean) => {
+  const addPassenger = async () => {
+    if (!newPassenger.photo_url) {
+      toast({
+        title: 'Ошибка',
+        description: 'Необходимо указать URL фотографии',
+        variant: 'destructive',
+      });
+      return;
+    }
+    
+    setIsAddingPassenger(true);
+    try {
+      const response = await fetch('https://functions.poehali.dev/9b67e555-8059-4828-adf9-09677d9dacd0', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          pet_name: newPassenger.pet_name,
+          pet_type: newPassenger.pet_type,
+          photo_url: newPassenger.photo_url,
+          description: newPassenger.description,
+          is_published: true
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        toast({
+          title: 'Фото добавлено',
+          description: 'Фотография успешно добавлена в галерею',
+        });
+        setNewPassenger({ pet_name: '', pet_type: '', photo_url: '', description: '' });
+        loadData();
+      } else {
+        toast({
+          title: 'Ошибка',
+          description: result.error || 'Не удалось добавить фото',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка добавления фото:', error);
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
+    }
+    setIsAddingPassenger(false);
+  };
+
+  const deletePassenger = async (passengerId: number) => {
+    try {
+      const response = await fetch(`https://functions.poehali.dev/9b67e555-8059-4828-adf9-09677d9dacd0?id=${passengerId}`, {
+        method: 'DELETE'
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        setPassengers(passengers.filter(p => p.id !== passengerId));
+        toast({
+          title: 'Фото удалено',
+          description: 'Фотография удалена из галереи',
+        });
+      } else {
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось удалить фото',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка удаления фото:', error);
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const togglePassengerPublish = async (passengerId: number, isPublished: boolean) => {
+    try {
+      const response = await fetch(`https://functions.poehali.dev/9b67e555-8059-4828-adf9-09677d9dacd0?id=${passengerId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          is_published: !isPublished
+        })
+      });
+      
+      if (response.ok) {
+        setPassengers(passengers.map(p =>
+          p.id === passengerId ? { ...p, is_published: !isPublished } : p
+        ));
+        toast({
+          title: !isPublished ? 'Опубликовано' : 'Снято с публикации',
+          description: 'Статус фотографии обновлен',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка обновления статуса:', error);
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось обновить статус',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const setFeaturedReview = async (reviewId: number, featured: boolean) => {"}
     try {
       const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
         method: 'PUT',
@@ -487,7 +626,7 @@ const Admin: React.FC = () => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="orders">
               <Icon name="Car" size={16} className="mr-2" />
               Заявки ({orders.length})
@@ -495,6 +634,10 @@ const Admin: React.FC = () => {
             <TabsTrigger value="reviews">
               <Icon name="Star" size={16} className="mr-2" />
               Отзывы ({reviews.length})
+            </TabsTrigger>
+            <TabsTrigger value="passengers">
+              <Icon name="Image" size={16} className="mr-2" />
+              Наши пассажиры ({passengers.length})
             </TabsTrigger>
           </TabsList>
 
@@ -797,6 +940,137 @@ const Admin: React.FC = () => {
                     </div>
                   )}
                 </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Passengers Tab */}
+          <TabsContent value="passengers">
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Icon name="Image" size={24} />
+                      Галерея "Наши пассажиры"
+                    </CardTitle>
+                    <CardDescription>Управление фотографиями питомцев</CardDescription>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {/* Форма добавления фото */}
+                <div className="mb-6 p-4 border rounded-lg bg-gray-50">
+                  <h3 className="font-semibold mb-4 flex items-center gap-2">
+                    <Icon name="Plus" size={20} />
+                    Добавить фото
+                  </h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <Input
+                      placeholder="Кличка питомца"
+                      value={newPassenger.pet_name}
+                      onChange={(e) => setNewPassenger({...newPassenger, pet_name: e.target.value})}
+                    />
+                    <Input
+                      placeholder="Тип животного (собака, кошка...)"
+                      value={newPassenger.pet_type}
+                      onChange={(e) => setNewPassenger({...newPassenger, pet_type: e.target.value})}
+                    />
+                    <Input
+                      placeholder="URL фотографии *"
+                      value={newPassenger.photo_url}
+                      onChange={(e) => setNewPassenger({...newPassenger, photo_url: e.target.value})}
+                      className="md:col-span-2"
+                    />
+                    <Textarea
+                      placeholder="Описание (необязательно)"
+                      value={newPassenger.description}
+                      onChange={(e) => setNewPassenger({...newPassenger, description: e.target.value})}
+                      className="md:col-span-2"
+                      rows={2}
+                    />
+                  </div>
+                  <Button 
+                    onClick={addPassenger} 
+                    disabled={isAddingPassenger || !newPassenger.photo_url}
+                    className="mt-4"
+                  >
+                    <Icon name="Plus" size={16} className="mr-2" />
+                    {isAddingPassenger ? 'Добавление...' : 'Добавить фото'}
+                  </Button>
+                </div>
+
+                {/* Галерея */}
+                <div className="grid md:grid-cols-3 gap-4">
+                  {passengers.map((passenger) => (
+                    <Card key={passenger.id} className="overflow-hidden">
+                      <div className="aspect-square relative">
+                        <img 
+                          src={passenger.photo_url} 
+                          alt={passenger.pet_name || 'Пассажир'} 
+                          className="w-full h-full object-cover"
+                        />
+                        {!passenger.is_published && (
+                          <Badge className="absolute top-2 right-2 bg-red-500">
+                            Скрыто
+                          </Badge>
+                        )}
+                      </div>
+                      <CardContent className="p-4">
+                        <div className="space-y-2">
+                          {passenger.pet_name && (
+                            <h4 className="font-semibold">{passenger.pet_name}</h4>
+                          )}
+                          {passenger.pet_type && (
+                            <p className="text-sm text-gray-600">{passenger.pet_type}</p>
+                          )}
+                          {passenger.description && (
+                            <p className="text-sm text-gray-500">{passenger.description}</p>
+                          )}
+                          <div className="flex gap-2 pt-2">
+                            <Button
+                              size="sm"
+                              variant={passenger.is_published ? "outline" : "default"}
+                              onClick={() => togglePassengerPublish(passenger.id, passenger.is_published)}
+                            >
+                              <Icon name={passenger.is_published ? "EyeOff" : "Eye"} size={14} className="mr-1" />
+                              {passenger.is_published ? 'Скрыть' : 'Показать'}
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button size="sm" variant="destructive">
+                                  <Icon name="Trash2" size={14} className="mr-1" />
+                                  Удалить
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>Удалить фото?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    Вы уверены, что хотите удалить это фото? Это действие нельзя отменить.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>Отмена</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deletePassenger(passenger.id)}>
+                                    Удалить
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {passengers.length === 0 && (
+                  <div className="text-center py-12">
+                    <Icon name="ImageOff" className="mx-auto mb-4 text-gray-400" size={48} />
+                    <p className="text-gray-500">Галерея пуста. Добавьте первое фото!</p>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

@@ -10,6 +10,7 @@ import Icon from '@/components/ui/icon';
 
 import WhatsAppButton from '@/components/WhatsAppButton';
 import OrderForm from '@/components/OrderForm';
+import PassengersGallery from '@/components/PassengersGallery';
 
 const Index = () => {
   const [reviewName, setReviewName] = useState('');
@@ -524,6 +525,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Passengers Gallery */}
+      <PassengersGallery />
 
       {/* Booking Section */}
       <section id="booking" className="py-16 px-4 bg-white">
