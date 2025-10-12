@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Добавить отзывы</title>
+</head>
+<body>
+    <h1>Добавление отзывов в базу данных</h1>
+    <button onclick="addReviews()">Добавить отзывы</button>
+    <div id="result"></div>
+
+    <script>
+        const reviews = [
+            {
+                client_name: 'Анна Королева',
+                client_phone: '+79161234567',
+                rating: 5,
+                title: 'Отличный сервис!',
+                content: 'Возили кота Мурзика к ветеринару. Водитель приехал точно в назначенное время, помог с переноской. Кот перенес поездку спокойно, без стресса. Обязательно буду пользоваться еще!',
+                service_type: 'Ветеринарные поездки',
+                trip_date: '2024-10-05'
+            },
+            {
+                client_name: 'Михаил Дронов',
+                client_phone: '+79267654321',
+                rating: 5,
+                title: 'Профессионально и быстро',
+                content: 'Переезжали с собакой из одного конца Москвы в другой. Все прошло идеально - собака была спокойна, водитель помог с переноской вещей. Цены честные, сервис на высоте!',
+                service_type: 'Переезды',
+                trip_date: '2024-10-08'
+            },
+            {
+                client_name: 'Елена Соколова',
+                client_phone: '+79854567890',
+                rating: 5,
+                title: 'Спасли в экстренной ситуации',
+                content: 'Срочно нужно было доставить кролика в ветклинику ночью. Приехали через 20 минут! Профессиональный подход и забота о животном на высоте. Спасибо огромное!',
+                service_type: 'Ветеринарные поездки',
+                trip_date: '2024-10-10'
+            },
+            {
+                client_name: 'Ольга Петрова',
+                client_phone: '+79165556677',
+                rating: 5,
+                title: 'Очень довольны',
+                content: 'Везли кошку на груминг. Водитель очень аккуратно вел машину, кошка не нервничала. В салоне чисто, есть кондиционер. Рекомендую всем владельцам животных!',
+                service_type: 'Груминг',
+                trip_date: '2024-09-28'
+            },
+            {
+                client_name: 'Сергей Иванов',
+                client_phone: '+79267778899',
+                rating: 4,
+                title: 'Хороший сервис',
+                content: 'Возили собаку в аэропорт Шереметьево. Приехали вовремя, помогли с оформлением документов. Единственное - немного дороговато, но качество того стоит.',
+                service_type: 'Аэропорт',
+                trip_date: '2024-09-30'
+            },
+            {
+                client_name: 'Мария Белова',
+                client_phone: '+79161112233',
+                rating: 5,
+                title: 'Лучшее зоотакси в Москве',
+                content: 'Пользуемся услугами уже полгода. Всегда пунктуальны, вежливы, машины чистые. Наш пёс Рекс уже привык и с радостью едет в их машине. Спасибо за заботу!',
+                service_type: 'Ветеринарные поездки',
+                trip_date: '2024-10-01'
+            },
+            {
+                client_name: 'Дмитрий Козлов',
+                client_phone: '+79263334455',
+                rating: 5,
+                title: 'Быстро и удобно',
+                content: 'Заказывал доставку хорька к ветеринару. Все прошло отлично, хорек в переноске чувствовал себя комфортно. Водитель знает, как обращаться с животными. Буду рекомендовать друзьям!',
+                service_type: 'Ветеринарные поездки',
+                trip_date: '2024-10-11'
+            },
+            {
+                client_name: 'Татьяна Смирнова',
+                client_phone: '+79855667788',
+                rating: 4,
+                title: 'Хорошо, но есть нюансы',
+                content: 'Везли попугая на осмотр. В целом все хорошо, но хотелось бы больше вариантов оплаты. А так - водитель внимательный, ехал аккуратно.',
+                service_type: 'Ветеринарные поездки',
+                trip_date: '2024-09-25'
+            }
+        ];
+
+        async function addReviews() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<p>Добавление отзывов...</p>';
+            
+            let successCount = 0;
+            let errorCount = 0;
+            
+            for (const review of reviews) {
+                try {
+                    const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(review)
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (response.ok) {
+                        successCount++;
+                        console.log('Добавлен отзыв:', review.client_name);
+                    } else {
+                        errorCount++;
+                        console.error('Ошибка при добавлении отзыва:', review.client_name, result.error);
+                    }
+                } catch (error) {
+                    errorCount++;
+                    console.error('Ошибка сети:', error);
+                }
+            }
+            
+            resultDiv.innerHTML = `
+                <h2>Результаты:</h2>
+                <p>Успешно добавлено: ${successCount}</p>
+                <p>Ошибок: ${errorCount}</p>
+                <p><a href="/admin">Перейти в админ панель</a></p>
+            `;
+        }
+    </script>
+</body>
+</html>
