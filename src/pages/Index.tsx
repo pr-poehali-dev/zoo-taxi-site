@@ -9,6 +9,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import Icon from '@/components/ui/icon';
 
 import WhatsAppButton from '@/components/WhatsAppButton';
+import TelegramButton from '@/components/TelegramButton';
 import OrderForm from '@/components/OrderForm';
 import PassengersGallery from '@/components/PassengersGallery';
 
@@ -661,10 +662,10 @@ const Index = () => {
           </div>
           <p className="text-gray-400 mb-4">Безопасные поездки для ваших питомцев</p>
           <div className="flex justify-center space-x-6">
-            <a href="tel:+79685227272" className="hover:text-primary transition-colors">
+            <a href="tel:+79685227272" className="hover:text-primary transition-colors" title="Позвонить">
               <Icon name="Phone" size={20} />
             </a>
-            <a href="mailto:info@zootaxi.ru" className="hover:text-primary transition-colors">
+            <a href="mailto:info@zootaxi.ru" className="hover:text-primary transition-colors" title="Написать email">
               <Icon name="Mail" size={20} />
             </a>
             <a 
@@ -672,8 +673,18 @@ const Index = () => {
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
+              title="WhatsApp"
             >
               <Icon name="MessageCircle" size={20} />
+            </a>
+            <a 
+              href="https://t.me/zootaxi_uyut?text=Здравствуйте! Хочу заказать зоотакси для моего питомца" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+              title="Telegram"
+            >
+              <Icon name="Send" size={20} />
             </a>
           </div>
           <div className="mt-6 pt-6 border-t border-gray-700 text-sm text-gray-400">
@@ -683,6 +694,7 @@ const Index = () => {
       </footer>
       
       <WhatsAppButton />
+      <TelegramButton />
     </div>
   );
 };
