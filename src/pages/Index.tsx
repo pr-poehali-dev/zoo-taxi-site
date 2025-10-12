@@ -137,7 +137,7 @@ const Index = () => {
               <Card className="shadow-xl border-0 bg-white/95 backdrop-blur">
                 <CardHeader className="text-center">
                   <CardTitle className="text-2xl text-primary">Быстрый заказ</CardTitle>
-                  <CardDescription>Заполните форму и мы перезвоним в течение 5 минут</CardDescription>
+                  <CardDescription>Заполните форму и мы перезвоним в течение 15 минут</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
