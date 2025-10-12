@@ -107,7 +107,7 @@ const Admin: React.FC = () => {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          order_id: orderId,
+          id: orderId,
           status: newStatus
         })
       });
