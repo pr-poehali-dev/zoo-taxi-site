@@ -83,6 +83,8 @@ const Admin: React.FC = () => {
   const [newPassenger, setNewPassenger] = useState({ pet_name: '', pet_type: '', photo_url: '', description: '' });
   const [isAddingPassenger, setIsAddingPassenger] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [contacts, setContacts] = useState({ phone: '79685227272', telegram: 'zootaxi_uyut', whatsapp: '79685227272' });
+  const [editingContacts, setEditingContacts] = useState(false);
 
   // Фильтры
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
@@ -92,6 +94,10 @@ const Admin: React.FC = () => {
 
   useEffect(() => {
     loadData();
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts) {
+      setContacts(JSON.parse(savedContacts));
+    }
   }, []);
 
   const loadData = async () => {
@@ -710,7 +716,7 @@ const Admin: React.FC = () => {
 
         {/* Main Content Tabs */}
         <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="orders">
               <Icon name="Car" size={16} className="mr-2" />
               Заявки ({orders.length})
@@ -722,6 +728,10 @@ const Admin: React.FC = () => {
             <TabsTrigger value="passengers">
               <Icon name="Image" size={16} className="mr-2" />
               Наши пассажиры ({passengers.length})
+            </TabsTrigger>
+            <TabsTrigger value="contacts">
+              <Icon name="Phone" size={16} className="mr-2" />
+              Контакты
             </TabsTrigger>
           </TabsList>
 
@@ -1021,6 +1031,140 @@ const Admin: React.FC = () => {
                     <div className="text-center py-12">
                       <Icon name="MessageSquareX" className="mx-auto mb-4 text-gray-400" size={48} />
                       <p className="text-gray-500">Отзывов с выбранным статусом нет</p>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Contacts Tab */}
+          <TabsContent value="contacts">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Icon name="Phone" size={24} />
+                  Контакты для связи
+                </CardTitle>
+                <CardDescription>Управление номерами телефонов и мессенджеров</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-6">
+                  {editingContacts ? (
+                    <div className="space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          <Icon name="Phone" size={16} className="inline mr-2" />
+                          Номер телефона
+                        </label>
+                        <Input
+                          placeholder="79685227272"
+                          value={contacts.phone}
+                          onChange={(e) => setContacts({...contacts, phone: e.target.value})}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Формат: 79685227272 (без +)</p>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          <Icon name="Send" size={16} className="inline mr-2" />
+                          Telegram username
+                        </label>
+                        <Input
+                          placeholder="zootaxi_uyut"
+                          value={contacts.telegram}
+                          onChange={(e) => setContacts({...contacts, telegram: e.target.value})}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Без символа @</p>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium mb-2">
+                          <Icon name="MessageCircle" size={16} className="inline mr-2" />
+                          WhatsApp номер
+                        </label>
+                        <Input
+                          placeholder="79685227272"
+                          value={contacts.whatsapp}
+                          onChange={(e) => setContacts({...contacts, whatsapp: e.target.value})}
+                        />
+                        <p className="text-xs text-gray-500 mt-1">Формат: 79685227272 (без +)</p>
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Button onClick={() => {
+                          localStorage.setItem('contacts', JSON.stringify(contacts));
+                          setEditingContacts(false);
+                          toast({
+                            title: 'Контакты сохранены',
+                            description: 'Изменения будут применены после перезагрузки страницы',
+                          });
+                        }}>
+                          <Icon name="Save" size={16} className="mr-2" />
+                          Сохранить
+                        </Button>
+                        <Button variant="outline" onClick={() => setEditingContacts(false)}>
+                          Отмена
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="grid md:grid-cols-3 gap-6">
+                        <Card>
+                          <CardContent className="p-6">
+                            <div className="flex items-center gap-3 mb-2">
+                              <Icon name="Phone" className="text-primary" size={24} />
+                              <div>
+                                <p className="text-sm text-gray-600">Телефон</p>
+                                <p className="font-semibold text-lg">+{contacts.phone}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card>
+                          <CardContent className="p-6">
+                            <div className="flex items-center gap-3 mb-2">
+                              <Icon name="Send" className="text-[#0088cc]" size={24} />
+                              <div>
+                                <p className="text-sm text-gray-600">Telegram</p>
+                                <p className="font-semibold text-lg">@{contacts.telegram}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        
+                        <Card>
+                          <CardContent className="p-6">
+                            <div className="flex items-center gap-3 mb-2">
+                              <Icon name="MessageCircle" className="text-green-600" size={24} />
+                              <div>
+                                <p className="text-sm text-gray-600">WhatsApp</p>
+                                <p className="font-semibold text-lg">+{contacts.whatsapp}</p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                      
+                      <Button onClick={() => setEditingContacts(true)}>
+                        <Icon name="Edit" size={16} className="mr-2" />
+                        Изменить контакты
+                      </Button>
+                      
+                      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                        <h4 className="font-semibold mb-2 flex items-center gap-2">
+                          <Icon name="Info" size={18} className="text-blue-600" />
+                          Где используются контакты:
+                        </h4>
+                        <ul className="text-sm text-gray-700 space-y-1 ml-6 list-disc">
+                          <li>Кнопки на главной странице (Hero секция)</li>
+                          <li>Плавающие кнопки WhatsApp и Telegram</li>
+                          <li>Контакты в футере сайта</li>
+                          <li>Номер телефона для звонков</li>
+                        </ul>
+                      </div>
                     </div>
                   )}
                 </div>

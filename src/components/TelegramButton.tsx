@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 
@@ -10,11 +10,22 @@ interface TelegramButtonProps {
 }
 
 const TelegramButton: React.FC<TelegramButtonProps> = ({ 
-  username = 'zootaxi_uyut',
+  username: propUsername,
   phoneNumber,
   message = 'Здравствуйте! Хочу заказать зоотакси',
   className = ''
 }) => {
+  const [username, setUsername] = useState(propUsername || 'zootaxi_uyut');
+  
+  useEffect(() => {
+    if (!propUsername) {
+      const savedContacts = localStorage.getItem('contacts');
+      if (savedContacts) {
+        const contacts = JSON.parse(savedContacts);
+        setUsername(contacts.telegram || 'zootaxi_uyut');
+      }
+    }
+  }, [propUsername]);
   const handleClick = () => {
     let telegramUrl = '';
     

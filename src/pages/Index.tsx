@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,6 +19,14 @@ const Index = () => {
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [contacts, setContacts] = useState({ phone: '79685227272', telegram: 'zootaxi_uyut', whatsapp: '79685227272' });
+  
+  useEffect(() => {
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts) {
+      setContacts(JSON.parse(savedContacts));
+    }
+  }, []);
 
   const handleSubmitReview = async () => {
     if (!reviewName || !reviewRating || !reviewText) {
@@ -116,7 +124,7 @@ const Index = () => {
                 <Button 
                   size="lg" 
                   className="animate-scale-in bg-green-500 hover:bg-green-600 text-white"
-                  onClick={() => window.open('https://wa.me/79685227272?text=Здравствуйте! Хочу заказать зоотакси для моего питомца', '_blank')}
+                  onClick={() => window.open(`https://wa.me/${contacts.whatsapp}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`, '_blank')}
                 >
                   <Icon name="MessageCircle" size={20} className="mr-2" />
                   WhatsApp
@@ -124,7 +132,7 @@ const Index = () => {
                 <Button 
                   size="lg" 
                   className="animate-scale-in bg-[#0088cc] hover:bg-[#0077b5] text-white"
-                  onClick={() => window.open('https://t.me/zootaxi_uyut?text=Здравствуйте! Хочу заказать зоотакси для моего питомца', '_blank')}
+                  onClick={() => window.open(`https://t.me/${contacts.telegram}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`, '_blank')}
                 >
                   <Icon name="Send" size={20} className="mr-2" />
                   Telegram
@@ -642,7 +650,7 @@ const Index = () => {
             <div className="animate-fade-in">
               <Icon name="Phone" className="text-primary mb-4 mx-auto" size={48} />
               <h4 className="text-xl font-semibold mb-2">Телефон</h4>
-              <p className="text-gray-600">+7 (968) 522-72-72</p>
+              <p className="text-gray-600">+{contacts.phone}</p>
               <p className="text-sm text-gray-500">Круглосуточно</p>
             </div>
             <div className="animate-fade-in">
@@ -670,14 +678,14 @@ const Index = () => {
           </div>
           <p className="text-gray-400 mb-4">Безопасные поездки для ваших питомцев</p>
           <div className="flex justify-center space-x-6">
-            <a href="tel:+79685227272" className="hover:text-primary transition-colors" title="Позвонить">
+            <a href={`tel:+${contacts.phone}`} className="hover:text-primary transition-colors" title="Позвонить">
               <Icon name="Phone" size={20} />
             </a>
             <a href="mailto:info@zootaxi.ru" className="hover:text-primary transition-colors" title="Написать email">
               <Icon name="Mail" size={20} />
             </a>
             <a 
-              href="https://wa.me/79685227272?text=Здравствуйте! Хочу заказать зоотакси для моего питомца" 
+              href={`https://wa.me/${contacts.whatsapp}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`}
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
@@ -686,7 +694,7 @@ const Index = () => {
               <Icon name="MessageCircle" size={20} />
             </a>
             <a 
-              href="https://t.me/zootaxi_uyut?text=Здравствуйте! Хочу заказать зоотакси для моего питомца" 
+              href={`https://t.me/${contacts.telegram}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`}
               target="_blank" 
               rel="noopener noreferrer"
               className="hover:text-primary transition-colors"
