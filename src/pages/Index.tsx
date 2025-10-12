@@ -121,6 +121,14 @@ const Index = () => {
                   <Icon name="MessageCircle" size={20} className="mr-2" />
                   WhatsApp
                 </Button>
+                <Button 
+                  size="lg" 
+                  className="animate-scale-in bg-[#0088cc] hover:bg-[#0077b5] text-white"
+                  onClick={() => window.open('https://t.me/zootaxi_uyut?text=Здравствуйте! Хочу заказать зоотакси для моего питомца', '_blank')}
+                >
+                  <Icon name="Send" size={20} className="mr-2" />
+                  Telegram
+                </Button>
               </div>
             </div>
             
