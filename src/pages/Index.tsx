@@ -6,7 +6,6 @@ import GallerySection from '@/components/sections/GallerySection';
 import AdvantagesSection from '@/components/sections/AdvantagesSection';
 import ReviewsSection from '@/components/sections/ReviewsSection';
 import PassengersGallery from '@/components/PassengersGallery';
-import OrderForm from '@/components/OrderForm';
 import FAQSection from '@/components/sections/FAQSection';
 import ContactsSection from '@/components/sections/ContactsSection';
 import Footer from '@/components/sections/Footer';
@@ -32,14 +31,6 @@ const Index = () => {
       <AdvantagesSection />
       <ReviewsSection />
       <PassengersGallery />
-      
-      <section id="booking" className="py-16 px-4 bg-white">
-        <div className="container mx-auto">
-          <h3 className="text-3xl font-bold text-center mb-12">Заказать поездку</h3>
-          <OrderForm />
-        </div>
-      </section>
-
       <FAQSection />
       <ContactsSection contacts={contacts} />
       <Footer contacts={contacts} />
