@@ -200,6 +200,50 @@ const Admin: React.FC = () => {
     }
   };
 
+  const updateOrderPrice = async (orderId: number, price: number) => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/1c0b122d-a5b5-4727-aaa6-681c30e9f3f3', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: orderId,
+          estimated_price: price
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        setOrders(orders.map(order => 
+          order.id === orderId 
+            ? { ...order, estimated_price: price, updated_at: new Date().toISOString() }
+            : order
+        ));
+        
+        toast({
+          title: 'Стоимость обновлена',
+          description: `Для заявки #${orderId} установлена цена ${price} ₽`,
+        });
+      } else {
+        console.error('Ошибка обновления цены:', result.error);
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось обновить стоимость',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка сети при обновлении цены:', error);
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
+    }
+  };
+
   const publishReview = async (reviewId: number, publish: boolean) => {
     try {
       const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
@@ -463,6 +507,7 @@ const Admin: React.FC = () => {
             <OrdersTab 
               orders={orders} 
               onUpdateStatus={updateOrderStatus}
+              onUpdatePrice={updateOrderPrice}
               onDelete={deleteOrder}
             />
           </TabsContent>

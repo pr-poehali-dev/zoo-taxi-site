@@ -20,13 +20,16 @@ import type { Order } from './types';
 interface OrdersTabProps {
   orders: Order[];
   onUpdateStatus: (orderId: number, status: Order['status']) => void;
+  onUpdatePrice: (orderId: number, price: number) => void;
   onDelete: (orderId: number) => void;
 }
 
-const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onDelete }) => {
+const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdatePrice, onDelete }) => {
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
   const [orderSearchQuery, setOrderSearchQuery] = useState<string>('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [editingPrice, setEditingPrice] = useState<number | null>(null);
+  const [priceInput, setPriceInput] = useState<string>('');
 
   const getStatusBadge = (status: Order['status']) => {
     const styles = {
@@ -132,9 +135,59 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onDelete 
                 )}
                 
                 <div className="flex justify-between items-center">
-                  <p className="text-lg font-semibold text-primary">
-                    {order.estimated_price ? `${order.estimated_price} ₽` : 'Цена не указана'}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    {editingPrice === order.id ? (
+                      <div className="flex items-center gap-2">
+                        <Input
+                          type="number"
+                          value={priceInput}
+                          onChange={(e) => setPriceInput(e.target.value)}
+                          placeholder="Введите цену"
+                          className="w-32"
+                          autoFocus
+                        />
+                        <Button 
+                          size="sm"
+                          onClick={() => {
+                            const price = parseInt(priceInput);
+                            if (price > 0) {
+                              onUpdatePrice(order.id, price);
+                              setEditingPrice(null);
+                              setPriceInput('');
+                            }
+                          }}
+                        >
+                          <Icon name="Check" size={14} />
+                        </Button>
+                        <Button 
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setEditingPrice(null);
+                            setPriceInput('');
+                          }}
+                        >
+                          <Icon name="X" size={14} />
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-lg font-semibold text-primary">
+                          {order.estimated_price ? `${order.estimated_price} ₽` : 'Цена не указана'}
+                        </p>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => {
+                            setEditingPrice(order.id);
+                            setPriceInput(order.estimated_price?.toString() || '');
+                          }}
+                        >
+                          <Icon name="Edit" size={14} />
+                        </Button>
+                      </>
+                    )}
+                  </div>
                   <div className="space-x-2">
                     <Button 
                       size="sm" 
