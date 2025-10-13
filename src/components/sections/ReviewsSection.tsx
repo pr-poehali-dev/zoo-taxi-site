@@ -116,7 +116,7 @@ const ReviewsSection = () => {
   };
 
   return (
-    <section id="reviews" className="py-12 md:py-16 px-4 bg-gray-50">
+    <section id="reviews" className="py-12 md:py-16 px-2 bg-gray-50">
       <div className="container mx-auto">
         <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">Отзывы клиентов</h3>
         
@@ -132,7 +132,7 @@ const ReviewsSection = () => {
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
               {reviewsLoading ? (
-                <div className="w-full flex-shrink-0 px-4">
+                <div className="w-full flex-shrink-0 px-2">
                   <Card className="mx-auto max-w-2xl">
                     <CardContent className="p-8 text-center">
                       <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
@@ -141,7 +141,7 @@ const ReviewsSection = () => {
                   </Card>
                 </div>
               ) : reviews.length === 0 ? (
-                <div className="w-full flex-shrink-0 px-4">
+                <div className="w-full flex-shrink-0 px-2">
                   <Card className="mx-auto max-w-2xl">
                     <CardContent className="p-8 text-center">
                       <Icon name="MessageSquare" size={48} className="mx-auto text-gray-400 mb-4" />
@@ -151,7 +151,7 @@ const ReviewsSection = () => {
                 </div>
               ) : (
                 reviews.map((review) => (
-                  <div key={review.id} className="w-full flex-shrink-0 px-4">
+                  <div key={review.id} className="w-full flex-shrink-0 px-2">
                     <Card className="mx-auto max-w-2xl bg-white/50 backdrop-blur-sm border-white/60">
                       <CardContent className="p-6 md:p-8">
                         <div className="flex mb-4 justify-center">
@@ -243,7 +243,7 @@ const ReviewsSection = () => {
           </div>
         </div>
 
-        <div className="mt-12 md:mt-16 px-4">
+        <div className="mt-12 md:mt-16 px-2">
           <Card className="border-2 border-primary/20 bg-white/50 backdrop-blur-sm border-white/60">
             <CardHeader className="text-center pb-4">
               <CardTitle className="text-xl md:text-2xl text-primary">Оставить отзыв</CardTitle>
