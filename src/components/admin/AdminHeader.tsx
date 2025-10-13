@@ -5,9 +5,10 @@ import Icon from '@/components/ui/icon';
 interface AdminHeaderProps {
   onRefresh: () => void;
   loading: boolean;
+  onLogout?: () => void;
 }
 
-const AdminHeader: React.FC<AdminHeaderProps> = ({ onRefresh, loading }) => {
+const AdminHeader: React.FC<AdminHeaderProps> = ({ onRefresh, loading, onLogout }) => {
   return (
     <header className="bg-white shadow-sm border-b">
       <div className="container mx-auto px-4 py-4">
@@ -29,6 +30,12 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ onRefresh, loading }) => {
               <Icon name="Home" size={16} className="mr-2" />
               На главную
             </Button>
+            {onLogout && (
+              <Button variant="outline" onClick={onLogout}>
+                <Icon name="LogOut" size={16} className="mr-2" />
+                Выйти
+              </Button>
+            )}
           </div>
         </div>
       </div>
