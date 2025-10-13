@@ -12,6 +12,58 @@ const ReviewsSection = () => {
   const [reviewRating, setReviewRating] = useState(0);
   const [reviewText, setReviewText] = useState('');
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const reviews = [
+    {
+      id: 1,
+      rating: 5,
+      text: 'Отличный сервис! Водитель приехал точно в назначенное время, кот Мурзик перенес поездку к ветеринару без стресса. Обязательно буду пользоваться еще!',
+      name: 'Анна К.',
+      subtitle: 'Владелец кота'
+    },
+    {
+      id: 2,
+      rating: 5,
+      text: 'Переезжали с собакой из одного конца города в другой. Все прошло идеально - собака была спокойна, водитель помог с переноской. Цены честные!',
+      name: 'Михаил Д.',
+      subtitle: 'Владелец собаки'
+    },
+    {
+      id: 3,
+      rating: 5,
+      text: 'Срочно нужно было доставить кролика в ветклинику ночью. Приехали через 20 минут! Профессиональный подход и забота о животном на высоте.',
+      name: 'Елена С.',
+      subtitle: 'Владелец кролика'
+    }
+  ];
+
+  const nextSlide = () => {
+    setCurrentSlide((prev) => (prev + 1) % reviews.length);
+  };
+
+  const prevSlide = () => {
+    setCurrentSlide((prev) => (prev - 1 + reviews.length) % reviews.length);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 75) {
+      nextSlide();
+    }
+    if (touchStart - touchEnd < -75) {
+      prevSlide();
+    }
+  };
 
   const handleSubmitReview = async () => {
     if (!reviewName || !reviewRating || !reviewText) {
@@ -58,72 +110,76 @@ const ReviewsSection = () => {
     <section id="reviews" className="py-12 md:py-16 px-4 bg-gray-50">
       <div className="container mx-auto">
         <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">Отзывы клиентов</h3>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 max-w-6xl mx-auto">
-          <Card className="animate-fade-in">
-            <CardContent className="p-6">
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={20} />
-                ))}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "Отличный сервис! Водитель приехал точно в назначенное время, кот Мурзик перенес поездку к ветеринару без стресса. Обязательно буду пользоваться еще!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                  <Icon name="User" size={20} />
+        
+        <div className="max-w-4xl mx-auto relative">
+          <div 
+            className="overflow-hidden"
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+          >
+            <div 
+              className="flex transition-transform duration-500 ease-out"
+              style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+            >
+              {reviews.map((review) => (
+                <div key={review.id} className="w-full flex-shrink-0 px-4">
+                  <Card className="mx-auto max-w-2xl">
+                    <CardContent className="p-6 md:p-8">
+                      <div className="flex mb-4 justify-center">
+                        {[...Array(review.rating)].map((_, i) => (
+                          <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={24} />
+                        ))}
+                      </div>
+                      <p className="text-gray-700 mb-6 text-base md:text-lg text-center leading-relaxed">
+                        "{review.text}"
+                      </p>
+                      <div className="flex items-center justify-center">
+                        <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mr-3">
+                          <Icon name="User" size={24} className="text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-lg">{review.name}</p>
+                          <p className="text-sm text-gray-500">{review.subtitle}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                <div>
-                  <p className="font-semibold">Анна К.</p>
-                  <p className="text-sm text-gray-500">Владелец кота</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="animate-fade-in">
-            <CardContent className="p-6">
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={20} />
-                ))}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "Переезжали с собакой из одного конца города в другой. Все прошло идеально - собака была спокойна, водитель помог с переноской. Цены честные!"
-              </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                  <Icon name="User" size={20} />
-                </div>
-                <div>
-                  <p className="font-semibold">Михаил Д.</p>
-                  <p className="text-sm text-gray-500">Владелец собаки</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="animate-fade-in">
-            <CardContent className="p-6">
-              <div className="flex mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={20} />
-                ))}
-              </div>
-              <p className="text-gray-600 mb-4">
-                "Срочно нужно было доставить кролика в ветклинику ночью. Приехали через 20 минут! Профессиональный подход и забота о животном на высоте."
-              </p>
-              <div className="flex items-center">
-                <div className="w-10 h-10 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                  <Icon name="User" size={20} />
-                </div>
-                <div>
-                  <p className="font-semibold">Елена С.</p>
-                  <p className="text-sm text-gray-500">Владелец кролика</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              ))}
+            </div>
+          </div>
+
+          <button
+            onClick={prevSlide}
+            className="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-lg rounded-full w-12 h-12 items-center justify-center hover:bg-primary hover:text-white transition-colors z-10"
+            aria-label="Предыдущий отзыв"
+          >
+            <Icon name="ChevronLeft" size={24} />
+          </button>
+
+          <button
+            onClick={nextSlide}
+            className="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-lg rounded-full w-12 h-12 items-center justify-center hover:bg-primary hover:text-white transition-colors z-10"
+            aria-label="Следующий отзыв"
+          >
+            <Icon name="ChevronRight" size={24} />
+          </button>
+
+          <div className="flex justify-center gap-2 mt-6">
+            {reviews.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentSlide 
+                    ? 'bg-primary w-8' 
+                    : 'bg-gray-300 hover:bg-gray-400'
+                }`}
+                aria-label={`Перейти к отзыву ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
         
         <div className="text-center mt-8 md:mt-12">

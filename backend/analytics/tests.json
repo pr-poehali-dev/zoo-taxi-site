@@ -1,0 +1,35 @@
+{
+  "tests": [
+    {
+      "name": "Track visit successfully",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "path": "/",
+        "referrer": "https://google.com"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Get analytics data",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "expectedBody": {
+        "total_visits": "number",
+        "unique_visitors": "number"
+      },
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Handle OPTIONS for CORS",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    }
+  ]
+}

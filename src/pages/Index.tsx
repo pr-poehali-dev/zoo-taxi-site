@@ -13,10 +13,13 @@ import Footer from '@/components/sections/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import TelegramButton from '@/components/TelegramButton';
 import PhoneButton from '@/components/PhoneButton';
+import { useVisitTracker } from '@/hooks/useVisitTracker';
 
 const Index = () => {
   const [contacts, setContacts] = useState({ phone: '79685227272', telegram: 'zootaxi_uyut', whatsapp: '79685227272' });
   const [showFloatingButtons, setShowFloatingButtons] = useState(false);
+  
+  useVisitTracker();
   
   useEffect(() => {
     const savedContacts = localStorage.getItem('contacts');

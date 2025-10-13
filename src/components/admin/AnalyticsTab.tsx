@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 import type { Order, Review } from './types';
@@ -8,7 +8,35 @@ interface AnalyticsTabProps {
   reviews: Review[];
 }
 
+interface VisitStats {
+  total_visits: number;
+  unique_visitors: number;
+  visits_today: number;
+  visits_week: number;
+  top_pages: Array<{ path: string; count: number }>;
+  daily_stats: Array<{ date: string; count: number }>;
+}
+
 const AnalyticsTab: React.FC<AnalyticsTabProps> = ({ orders, reviews }) => {
+  const [visitStats, setVisitStats] = useState<VisitStats | null>(null);
+  const [loadingVisits, setLoadingVisits] = useState(true);
+
+  useEffect(() => {
+    const fetchVisitStats = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/00089f10-0d3b-4a9e-832b-94833ba4996f');
+        const data = await response.json();
+        setVisitStats(data);
+      } catch (error) {
+        console.error('Failed to fetch visit stats:', error);
+      } finally {
+        setLoadingVisits(false);
+      }
+    };
+
+    fetchVisitStats();
+  }, []);
+
   const analytics = useMemo(() => {
     const now = new Date();
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -91,47 +119,108 @@ const AnalyticsTab: React.FC<AnalyticsTabProps> = ({ orders, reviews }) => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
+            <Icon name="Users" size={24} />
+            Статистика посещений
+          </CardTitle>
+          <CardDescription>Посетители и просмотры сайта</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {loadingVisits ? (
+            <div className="text-center py-8 text-gray-500">
+              <Icon name="Loader2" className="animate-spin mx-auto mb-2" size={32} />
+              <p>Загрузка статистики...</p>
+            </div>
+          ) : visitStats ? (
+            <div className="grid md:grid-cols-4 gap-4 md:gap-6">
+              <div className="p-3 md:p-4 bg-indigo-50 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <Icon name="Eye" className="text-indigo-600" size={20} />
+                  <span className="text-xs text-indigo-600 font-semibold">ВСЕГО</span>
+                </div>
+                <p className="text-2xl md:text-3xl font-bold text-indigo-900">{visitStats.total_visits}</p>
+                <p className="text-xs md:text-sm text-indigo-700">Просмотров</p>
+              </div>
+
+              <div className="p-3 md:p-4 bg-pink-50 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <Icon name="Users" className="text-pink-600" size={20} />
+                  <span className="text-xs text-pink-600 font-semibold">УНИКАЛЬНЫЕ</span>
+                </div>
+                <p className="text-2xl md:text-3xl font-bold text-pink-900">{visitStats.unique_visitors}</p>
+                <p className="text-xs md:text-sm text-pink-700">Посетителей</p>
+              </div>
+
+              <div className="p-3 md:p-4 bg-cyan-50 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <Icon name="Calendar" className="text-cyan-600" size={20} />
+                  <span className="text-xs text-cyan-600 font-semibold">СЕГОДНЯ</span>
+                </div>
+                <p className="text-2xl md:text-3xl font-bold text-cyan-900">{visitStats.visits_today}</p>
+                <p className="text-xs md:text-sm text-cyan-700">За сегодня</p>
+              </div>
+
+              <div className="p-3 md:p-4 bg-teal-50 rounded-lg">
+                <div className="flex items-center justify-between mb-2">
+                  <Icon name="TrendingUp" className="text-teal-600" size={20} />
+                  <span className="text-xs text-teal-600 font-semibold">НЕДЕЛЯ</span>
+                </div>
+                <p className="text-2xl md:text-3xl font-bold text-teal-900">{visitStats.visits_week}</p>
+                <p className="text-xs md:text-sm text-teal-700">За 7 дней</p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8 text-red-500">
+              <Icon name="AlertCircle" className="mx-auto mb-2" size={32} />
+              <p>Не удалось загрузить статистику</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
             <Icon name="BarChart3" size={24} />
-            Общая статистика
+            Статистика заявок
           </CardTitle>
           <CardDescription>Ключевые показатели эффективности</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid md:grid-cols-4 gap-6">
-            <div className="p-4 bg-blue-50 rounded-lg">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
+            <div className="p-3 md:p-4 bg-blue-50 rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <Icon name="Calendar" className="text-blue-600" size={24} />
+                <Icon name="Calendar" className="text-blue-600" size={20} />
                 <span className="text-xs text-blue-600 font-semibold">СЕГОДНЯ</span>
               </div>
-              <p className="text-3xl font-bold text-blue-900">{analytics.todayOrders}</p>
-              <p className="text-sm text-blue-700">Заявок за сегодня</p>
+              <p className="text-2xl md:text-3xl font-bold text-blue-900">{analytics.todayOrders}</p>
+              <p className="text-xs md:text-sm text-blue-700">Заявок за сегодня</p>
             </div>
 
-            <div className="p-4 bg-green-50 rounded-lg">
+            <div className="p-3 md:p-4 bg-green-50 rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <Icon name="TrendingUp" className="text-green-600" size={24} />
+                <Icon name="TrendingUp" className="text-green-600" size={20} />
                 <span className="text-xs text-green-600 font-semibold">НЕДЕЛЯ</span>
               </div>
-              <p className="text-3xl font-bold text-green-900">{analytics.weekOrders}</p>
-              <p className="text-sm text-green-700">Заявок за 7 дней</p>
+              <p className="text-2xl md:text-3xl font-bold text-green-900">{analytics.weekOrders}</p>
+              <p className="text-xs md:text-sm text-green-700">Заявок за 7 дней</p>
             </div>
 
-            <div className="p-4 bg-purple-50 rounded-lg">
+            <div className="p-3 md:p-4 bg-purple-50 rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <Icon name="CalendarDays" className="text-purple-600" size={24} />
+                <Icon name="CalendarDays" className="text-purple-600" size={20} />
                 <span className="text-xs text-purple-600 font-semibold">МЕСЯЦ</span>
               </div>
-              <p className="text-3xl font-bold text-purple-900">{analytics.monthOrders}</p>
-              <p className="text-sm text-purple-700">Заявок за месяц</p>
+              <p className="text-2xl md:text-3xl font-bold text-purple-900">{analytics.monthOrders}</p>
+              <p className="text-xs md:text-sm text-purple-700">Заявок за месяц</p>
             </div>
 
-            <div className="p-4 bg-orange-50 rounded-lg">
+            <div className="p-3 md:p-4 bg-orange-50 rounded-lg">
               <div className="flex items-center justify-between mb-2">
-                <Icon name="Percent" className="text-orange-600" size={24} />
+                <Icon name="Percent" className="text-orange-600" size={20} />
                 <span className="text-xs text-orange-600 font-semibold">КОНВЕРСИЯ</span>
               </div>
-              <p className="text-3xl font-bold text-orange-900">{analytics.conversionRate}%</p>
-              <p className="text-sm text-orange-700">Успешных заявок</p>
+              <p className="text-2xl md:text-3xl font-bold text-orange-900">{analytics.conversionRate}%</p>
+              <p className="text-xs md:text-sm text-orange-700">Успешных заявок</p>
             </div>
           </div>
         </CardContent>
