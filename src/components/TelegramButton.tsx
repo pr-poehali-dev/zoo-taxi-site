@@ -48,7 +48,7 @@ const TelegramButton: React.FC<TelegramButtonProps> = ({
   };
 
   return (
-    <div className="fixed bottom-18 right-3 z-50 opacity-0 animate-fade-in-right animate-delay-100">
+    <div className="fixed bottom-[4.5rem] right-3 z-50 opacity-0 animate-fade-in-right animate-delay-100">
       <Button
         onClick={handleClick}
         size="sm"
