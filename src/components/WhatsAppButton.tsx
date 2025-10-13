@@ -17,11 +17,14 @@ const WhatsAppButton = () => {
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-6 right-4 z-50">
       <Button
         size="lg"
         className="rounded-full w-12 h-12 bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95"
-        onClick={() => window.open(whatsappUrl, '_blank')}
+        onClick={() => {
+          if (navigator.vibrate) navigator.vibrate(50);
+          window.open(whatsappUrl, '_blank');
+        }}
         title="Написать в WhatsApp"
       >
         <Icon name="MessageCircle" size={20} />
