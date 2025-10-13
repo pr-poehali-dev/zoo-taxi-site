@@ -32,6 +32,7 @@ interface AdminTabsProps {
   onDeleteOrder: (orderId: number) => void;
   onPublishReview: (reviewId: number, publish: boolean) => void;
   onSetFeaturedReview: (reviewId: number, featured: boolean) => void;
+  onReplyToReview: (reviewId: number, adminReply: string, replyAuthor: string) => void;
   onDeleteReview: (reviewId: number) => void;
   onAddPassenger: (passenger: { pet_name: string; pet_type: string; photo_url: string; description: string }) => void;
   onTogglePassengerPublish: (passengerId: number, isPublished: boolean) => void;
@@ -52,6 +53,7 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
   onDeleteOrder,
   onPublishReview,
   onSetFeaturedReview,
+  onReplyToReview,
   onDeleteReview,
   onAddPassenger,
   onTogglePassengerPublish,
@@ -115,6 +117,7 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
           reviews={reviews}
           onPublish={onPublishReview}
           onSetFeatured={onSetFeaturedReview}
+          onReply={onReplyToReview}
           onDelete={onDeleteReview}
         />
       </TabsContent>

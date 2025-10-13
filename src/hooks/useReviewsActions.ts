@@ -132,9 +132,61 @@ export const useReviewsActions = (
     }
   };
 
+  const replyToReview = async (reviewId: number, adminReply: string, replyAuthor: string) => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: reviewId,
+          admin_reply: adminReply,
+          reply_author: replyAuthor
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        setReviews(reviews.map(review =>
+          review.id === reviewId
+            ? { 
+                ...review, 
+                admin_reply: adminReply,
+                reply_author: replyAuthor,
+                replied_at: new Date().toISOString(),
+                updated_at: new Date().toISOString()
+              }
+            : review
+        ));
+        
+        toast({
+          title: 'Ответ отправлен',
+          description: `Ваш ответ на отзыв #${reviewId} сохранен`,
+        });
+      } else {
+        console.error('Ошибка отправки ответа:', result.error);
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось отправить ответ',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка сети при отправке ответа:', error);
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return {
     deleteReview,
     publishReview,
-    setFeaturedReview
+    setFeaturedReview,
+    replyToReview
   };
 };

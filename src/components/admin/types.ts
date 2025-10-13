@@ -36,6 +36,9 @@ export interface Review {
   is_published: boolean;
   is_featured: boolean;
   moderator_notes?: string;
+  admin_reply?: string;
+  reply_author?: string;
+  replied_at?: string;
   created_at: string;
   published_at?: string;
   updated_at: string;

@@ -15,19 +15,22 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import Icon from '@/components/ui/icon';
+import ReviewReplyDialog from './ReviewReplyDialog';
 import type { Review } from './types';
 
 interface ReviewsTabProps {
   reviews: Review[];
   onPublish: (reviewId: number, publish: boolean) => void;
   onSetFeatured: (reviewId: number, featured: boolean) => void;
+  onReply: (reviewId: number, adminReply: string, replyAuthor: string) => void;
   onDelete: (reviewId: number) => void;
 }
 
-const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, onPublish, onSetFeatured, onDelete }) => {
+const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, onPublish, onSetFeatured, onReply, onDelete }) => {
   const [reviewStatusFilter, setReviewStatusFilter] = useState<string>('all');
   const [reviewSearchQuery, setReviewSearchQuery] = useState<string>('');
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+  const [replyDialogOpen, setReplyDialogOpen] = useState(false);
 
   const getStarRating = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -127,6 +130,25 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, onPublish, onSetFeatur
                   </div>
                 )}
                 
+                {review.admin_reply && (
+                  <div className="mb-3 md:mb-4 p-3 bg-blue-50 border-l-4 border-blue-400 rounded">
+                    <div className="flex items-start gap-2 mb-2">
+                      <Icon name="MessageSquare" size={16} className="text-blue-600 mt-0.5" />
+                      <div className="flex-1">
+                        <p className="text-xs font-medium text-blue-900 mb-1">
+                          Ответ от {review.reply_author || 'Администратора'}
+                          {review.replied_at && (
+                            <span className="text-blue-600 font-normal ml-2">
+                              {new Date(review.replied_at).toLocaleDateString('ru-RU')}
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-sm text-blue-900">{review.admin_reply}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
                 <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
                   <p className="text-xs md:text-sm text-gray-500">
                     {new Date(review.created_at).toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' })}
@@ -135,11 +157,14 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, onPublish, onSetFeatur
                     <Button 
                       size="sm" 
                       variant="outline"
-                      onClick={() => setSelectedReview(review)}
+                      onClick={() => {
+                        setSelectedReview(review);
+                        setReplyDialogOpen(true);
+                      }}
                       className="text-xs md:text-sm px-2 md:px-3"
                     >
-                      <Icon name="Edit" size={14} className="md:mr-1" />
-                      <span className="hidden sm:inline">Редактировать</span>
+                      <Icon name="MessageSquare" size={14} className="md:mr-1" />
+                      <span className="hidden sm:inline">{review.admin_reply ? 'Изменить ответ' : 'Ответить'}</span>
                     </Button>
                     {!review.is_published ? (
                       <Button 
@@ -211,6 +236,18 @@ const ReviewsTab: React.FC<ReviewsTabProps> = ({ reviews, onPublish, onSetFeatur
           )}
         </div>
       </CardContent>
+
+      <ReviewReplyDialog
+        review={selectedReview}
+        isOpen={replyDialogOpen}
+        onClose={() => {
+          setReplyDialogOpen(false);
+          setSelectedReview(null);
+        }}
+        onSave={(reviewId, adminReply, replyAuthor) => {
+          onReply(reviewId, adminReply, replyAuthor);
+        }}
+      />
     </Card>
   );
 };

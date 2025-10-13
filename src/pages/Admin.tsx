@@ -70,7 +70,8 @@ const Admin: React.FC = () => {
   const {
     deleteReview,
     publishReview,
-    setFeaturedReview
+    setFeaturedReview,
+    replyToReview
   } = useReviewsActions(reviews, setReviews);
 
   const {
@@ -166,6 +167,7 @@ const Admin: React.FC = () => {
           onDeleteOrder={deleteOrder}
           onPublishReview={publishReview}
           onSetFeaturedReview={setFeaturedReview}
+          onReplyToReview={replyToReview}
           onDeleteReview={deleteReview}
           onAddPassenger={addPassenger}
           onTogglePassengerPublish={togglePassengerPublish}

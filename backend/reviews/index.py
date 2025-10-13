@@ -54,6 +54,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             query = """
                 SELECT id, client_name, client_email, client_phone, rating, title, content,
                        service_type, trip_date, is_published, is_featured, moderator_notes,
+                       admin_reply, reply_author, replied_at,
                        created_at, published_at, updated_at
                 FROM reviews
             """
@@ -97,6 +98,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     review_dict['updated_at'] = review_dict['updated_at'].isoformat()
                 if review_dict['published_at']:
                     review_dict['published_at'] = review_dict['published_at'].isoformat()
+                if review_dict['replied_at']:
+                    review_dict['replied_at'] = review_dict['replied_at'].isoformat()
                 if review_dict['trip_date']:
                     review_dict['trip_date'] = review_dict['trip_date'].strftime('%Y-%m-%d')
                 reviews_list.append(review_dict)
@@ -229,6 +232,15 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 update_fields.append("moderator_notes = %s")
                 params.append(body_data['moderator_notes'])
             
+            if 'admin_reply' in body_data:
+                update_fields.append("admin_reply = %s")
+                params.append(body_data['admin_reply'])
+                if body_data['admin_reply']:
+                    update_fields.append("replied_at = CURRENT_TIMESTAMP")
+                    if 'reply_author' in body_data:
+                        update_fields.append("reply_author = %s")
+                        params.append(body_data['reply_author'])
+            
             if not update_fields:
                 return {
                     'statusCode': 400,
@@ -246,7 +258,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 UPDATE reviews 
                 SET {', '.join(update_fields)}
                 WHERE id = %s
-                RETURNING id, is_published, is_featured
+                RETURNING id, is_published, is_featured, admin_reply, reply_author, replied_at
             """
             
             cursor.execute(update_query, params)
@@ -268,6 +280,9 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'id': result[0],
                     'is_published': result[1],
                     'is_featured': result[2],
+                    'admin_reply': result[3],
+                    'reply_author': result[4],
+                    'replied_at': result[5].isoformat() if result[5] else None,
                     'message': 'Отзыв обновлен'
                 }),
                 'isBase64Encoded': False

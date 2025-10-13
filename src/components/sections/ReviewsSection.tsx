@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import Icon from '@/components/ui/icon';
+
+interface Review {
+  id: number;
+  client_name: string;
+  rating: number;
+  title?: string;
+  content: string;
+  service_type?: string;
+  created_at: string;
+  admin_reply?: string;
+  reply_author?: string;
+  replied_at?: string;
+}
 
 const ReviewsSection = () => {
   const [reviewName, setReviewName] = useState('');
@@ -15,30 +28,26 @@ const ReviewsSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [reviewsLoading, setReviewsLoading] = useState(true);
 
-  const reviews = [
-    {
-      id: 1,
-      rating: 5,
-      text: 'Отличный сервис! Водитель приехал точно в назначенное время, кот Мурзик перенес поездку к ветеринару без стресса. Обязательно буду пользоваться еще!',
-      name: 'Анна К.',
-      subtitle: 'Владелец кота'
-    },
-    {
-      id: 2,
-      rating: 5,
-      text: 'Переезжали с собакой из одного конца города в другой. Все прошло идеально - собака была спокойна, водитель помог с переноской. Цены честные!',
-      name: 'Михаил Д.',
-      subtitle: 'Владелец собаки'
-    },
-    {
-      id: 3,
-      rating: 5,
-      text: 'Срочно нужно было доставить кролика в ветклинику ночью. Приехали через 20 минут! Профессиональный подход и забота о животном на высоте.',
-      name: 'Елена С.',
-      subtitle: 'Владелец кролика'
-    }
-  ];
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/84a1dd5d-042b-48e9-89cf-dc09b9361aed?public_only=true&limit=20');
+        const data = await response.json();
+        if (response.ok && data.reviews) {
+          setReviews(data.reviews);
+        }
+      } catch (error) {
+        console.error('Ошибка загрузки отзывов:', error);
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % reviews.length);
@@ -122,31 +131,74 @@ const ReviewsSection = () => {
               className="flex transition-transform duration-500 ease-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {reviews.map((review) => (
-                <div key={review.id} className="w-full flex-shrink-0 px-4">
+              {reviewsLoading ? (
+                <div className="w-full flex-shrink-0 px-4">
                   <Card className="mx-auto max-w-2xl">
-                    <CardContent className="p-6 md:p-8">
-                      <div className="flex mb-4 justify-center">
-                        {[...Array(review.rating)].map((_, i) => (
-                          <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={24} />
-                        ))}
-                      </div>
-                      <p className="text-gray-700 mb-6 text-base md:text-lg text-center leading-relaxed">
-                        "{review.text}"
-                      </p>
-                      <div className="flex items-center justify-center">
-                        <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mr-3">
-                          <Icon name="User" size={24} className="text-primary" />
-                        </div>
-                        <div>
-                          <p className="font-semibold text-lg">{review.name}</p>
-                          <p className="text-sm text-gray-500">{review.subtitle}</p>
-                        </div>
-                      </div>
+                    <CardContent className="p-8 text-center">
+                      <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto"></div>
+                      <p className="mt-4 text-gray-500">Загрузка отзывов...</p>
                     </CardContent>
                   </Card>
                 </div>
-              ))}
+              ) : reviews.length === 0 ? (
+                <div className="w-full flex-shrink-0 px-4">
+                  <Card className="mx-auto max-w-2xl">
+                    <CardContent className="p-8 text-center">
+                      <Icon name="MessageSquare" size={48} className="mx-auto text-gray-400 mb-4" />
+                      <p className="text-gray-500">Пока нет опубликованных отзывов</p>
+                    </CardContent>
+                  </Card>
+                </div>
+              ) : (
+                reviews.map((review) => (
+                  <div key={review.id} className="w-full flex-shrink-0 px-4">
+                    <Card className="mx-auto max-w-2xl">
+                      <CardContent className="p-6 md:p-8">
+                        <div className="flex mb-4 justify-center">
+                          {[...Array(review.rating)].map((_, i) => (
+                            <Icon key={i} name="Star" className="text-yellow-400 fill-current" size={24} />
+                          ))}
+                        </div>
+                        {review.title && (
+                          <h4 className="font-semibold text-lg text-center mb-3">{review.title}</h4>
+                        )}
+                        <p className="text-gray-700 mb-4 text-base md:text-lg text-center leading-relaxed">
+                          "{review.content}"
+                        </p>
+                        <div className="flex items-center justify-center mb-4">
+                          <div className="w-12 h-12 bg-gradient-to-br from-primary/20 to-primary/40 rounded-full flex items-center justify-center mr-3">
+                            <Icon name="User" size={24} className="text-primary" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-lg">{review.client_name}</p>
+                            {review.service_type && (
+                              <p className="text-sm text-gray-500">{review.service_type}</p>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {review.admin_reply && (
+                          <div className="mt-6 pt-6 border-t border-gray-200">
+                            <div className="bg-blue-50 rounded-lg p-4">
+                              <div className="flex items-start gap-3">
+                                <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                  <Icon name="ShieldCheck" size={20} className="text-white" />
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-blue-900 text-sm mb-1">
+                                    {review.reply_author || 'Администратор'}
+                                  </p>
+                                  <p className="text-blue-800 text-sm leading-relaxed">{review.admin_reply}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
