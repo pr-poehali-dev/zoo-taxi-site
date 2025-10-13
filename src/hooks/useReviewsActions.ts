@@ -47,7 +47,7 @@ export const useReviewsActions = (
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          review_id: reviewId,
+          id: reviewId,
           is_published: publish
         })
       });
@@ -96,7 +96,7 @@ export const useReviewsActions = (
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          review_id: reviewId,
+          id: reviewId,
           is_featured: featured
         })
       });
