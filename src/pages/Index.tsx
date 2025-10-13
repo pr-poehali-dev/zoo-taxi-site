@@ -72,9 +72,9 @@ const Index = () => {
       </div>
       
       <section id="booking" className="py-12 md:py-16 px-4">
-        <div className="container mx-auto max-w-4xl">
+        <div className="container mx-auto">
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-3 md:mb-4">🚗 Оформить заказ</h2>
-          <p className="text-center text-sm md:text-base text-gray-600 mb-8 md:mb-12 px-4">Заполните форму, и мы свяжемся с вами в ближайшее время</p>
+          <p className="text-center text-sm md:text-base text-gray-600 mb-8 md:mb-12">Заполните форму, и мы свяжемся с вами в ближайшее время</p>
           <OrderForm />
         </div>
       </section>

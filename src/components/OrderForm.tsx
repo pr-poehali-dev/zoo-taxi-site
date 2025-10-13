@@ -166,7 +166,7 @@ const OrderForm: React.FC = () => {
   };
 
   return (
-    <Card className="max-w-4xl mx-auto bg-white/50 backdrop-blur-sm border-white/60">
+    <Card className="bg-white/50 backdrop-blur-sm border-white/60">
       <CardHeader className="text-center pb-4">
         <CardTitle className="text-xl md:text-2xl flex items-center justify-center gap-2">
           <Icon name="Car" className="text-primary" size={24} />

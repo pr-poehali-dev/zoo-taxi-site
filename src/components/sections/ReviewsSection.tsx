@@ -152,7 +152,7 @@ const ReviewsSection = () => {
               ) : (
                 reviews.map((review) => (
                   <div key={review.id} className="w-full flex-shrink-0 px-4">
-                    <Card className="mx-auto max-w-2xl">
+                    <Card className="mx-auto max-w-2xl bg-white/50 backdrop-blur-sm border-white/60">
                       <CardContent className="p-6 md:p-8">
                         <div className="flex mb-4 justify-center">
                           {[...Array(review.rating)].map((_, i) => (
@@ -243,7 +243,7 @@ const ReviewsSection = () => {
           </div>
         </div>
 
-        <div className="mt-12 md:mt-16 max-w-2xl mx-auto px-4">
+        <div className="mt-12 md:mt-16 px-4">
           <Card className="border-2 border-primary/20 bg-white/50 backdrop-blur-sm border-white/60">
             <CardHeader className="text-center pb-4">
               <CardTitle className="text-xl md:text-2xl text-primary">Оставить отзыв</CardTitle>
