@@ -5,6 +5,7 @@ import Icon from '@/components/ui/icon';
 
 import AdminHeader from '@/components/admin/AdminHeader';
 import StatisticsCards from '@/components/admin/StatisticsCards';
+import AnalyticsTab from '@/components/admin/AnalyticsTab';
 import OrdersTab from '@/components/admin/OrdersTab';
 import ReviewsTab from '@/components/admin/ReviewsTab';
 import PassengersTab from '@/components/admin/PassengersTab';
@@ -423,8 +424,12 @@ const Admin: React.FC = () => {
       <div className="container mx-auto px-4 py-8">
         <StatisticsCards orders={orders} reviews={reviews} />
 
-        <Tabs defaultValue="orders" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+        <Tabs defaultValue="analytics" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger value="analytics">
+              <Icon name="BarChart3" size={16} className="mr-2" />
+              Аналитика
+            </TabsTrigger>
             <TabsTrigger value="orders">
               <Icon name="Car" size={16} className="mr-2" />
               Заявки ({orders.length})
@@ -435,7 +440,7 @@ const Admin: React.FC = () => {
             </TabsTrigger>
             <TabsTrigger value="passengers">
               <Icon name="Image" size={16} className="mr-2" />
-              Наши пассажиры ({passengers.length})
+              Пассажиры ({passengers.length})
             </TabsTrigger>
             <TabsTrigger value="contacts">
               <Icon name="Phone" size={16} className="mr-2" />
@@ -446,6 +451,13 @@ const Admin: React.FC = () => {
               Уведомления
             </TabsTrigger>
           </TabsList>
+
+          <TabsContent value="analytics" className="space-y-6">
+            <AnalyticsTab 
+              orders={orders}
+              reviews={reviews}
+            />
+          </TabsContent>
 
           <TabsContent value="orders" className="space-y-6">
             <OrdersTab 
