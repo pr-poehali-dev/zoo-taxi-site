@@ -184,8 +184,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             order_id = body_data.get('id')
             new_status = body_data.get('status')
             estimated_price = body_data.get('estimated_price')
-            admin_notes = body_data.get('admin_notes')
-            cancellation_reason = body_data.get('cancellation_reason')
+            
+            # Проверяем наличие полей в body_data, а не только их значение
+            has_admin_notes = 'admin_notes' in body_data
+            has_cancellation_reason = 'cancellation_reason' in body_data
+            admin_notes = body_data.get('admin_notes') if has_admin_notes else None
+            cancellation_reason = body_data.get('cancellation_reason') if has_cancellation_reason else None
             
             if not order_id:
                 return {
@@ -196,7 +200,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 }
             
             # Проверяем, что есть хотя бы одно поле для обновления
-            if not new_status and estimated_price is None and admin_notes is None and cancellation_reason is None:
+            if not new_status and estimated_price is None and not has_admin_notes and not has_cancellation_reason:
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
@@ -227,11 +231,11 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 update_fields.append('estimated_price = %s')
                 update_params.append(estimated_price)
             
-            if admin_notes is not None:
+            if has_admin_notes:
                 update_fields.append('admin_notes = %s')
                 update_params.append(admin_notes)
             
-            if cancellation_reason is not None:
+            if has_cancellation_reason:
                 update_fields.append('cancellation_reason = %s')
                 update_params.append(cancellation_reason)
             

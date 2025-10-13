@@ -137,16 +137,21 @@ export const useOrdersActions = (
 
   const updateOrderNotes = async (orderId: number, adminNotes: string, cancellationReason?: string) => {
     try {
+      const requestBody: { id: number; admin_notes: string; cancellation_reason?: string } = {
+        id: orderId,
+        admin_notes: adminNotes
+      };
+      
+      if (cancellationReason) {
+        requestBody.cancellation_reason = cancellationReason;
+      }
+      
       const response = await fetch('https://functions.poehali.dev/1c0b122d-a5b5-4727-aaa6-681c30e9f3f3', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          id: orderId,
-          admin_notes: adminNotes,
-          cancellation_reason: cancellationReason
-        })
+        body: JSON.stringify(requestBody)
       });
       
       const result = await response.json();
@@ -157,7 +162,7 @@ export const useOrdersActions = (
             ? { 
                 ...order, 
                 admin_notes: adminNotes,
-                cancellation_reason: cancellationReason,
+                ...(cancellationReason && { cancellation_reason: cancellationReason }),
                 updated_at: new Date().toISOString() 
               }
             : order
