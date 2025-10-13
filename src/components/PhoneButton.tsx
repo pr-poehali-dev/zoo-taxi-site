@@ -14,17 +14,17 @@ const PhoneButton = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-36 right-4 z-50 opacity-0 animate-fade-in-right animate-delay-200">
+    <div className="fixed bottom-32 right-3 z-50 opacity-0 animate-fade-in-right animate-delay-200">
       <Button
-        size="lg"
-        className="rounded-full w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95"
+        size="sm"
+        className="rounded-full w-11 h-11 bg-blue-600 hover:bg-blue-700 text-white shadow-md hover:shadow-xl transition-all duration-300 hover:scale-110 active:scale-95 p-0"
         onClick={() => {
           if (navigator.vibrate) navigator.vibrate(50);
           window.location.href = `tel:+${phoneNumber}`;
         }}
         title="Позвонить"
       >
-        <Icon name="Phone" size={20} />
+        <Icon name="Phone" size={18} />
       </Button>
     </div>
   );
