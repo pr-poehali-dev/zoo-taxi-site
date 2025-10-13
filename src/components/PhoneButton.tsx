@@ -14,7 +14,7 @@ const PhoneButton = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-36 right-4 z-50">
+    <div className="fixed bottom-36 right-4 z-50 opacity-0 animate-fade-in-right animate-delay-200">
       <Button
         size="lg"
         className="rounded-full w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95"
