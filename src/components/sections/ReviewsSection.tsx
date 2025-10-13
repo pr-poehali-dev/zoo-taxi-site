@@ -243,8 +243,8 @@ const ReviewsSection = () => {
           </div>
         </div>
 
-        <div className="mt-12 md:mt-16 max-w-2xl mx-auto">
-          <Card className="border-2 border-primary/20">
+        <div className="mt-12 md:mt-16 max-w-2xl mx-auto px-4">
+          <Card className="border-2 border-primary/20 bg-white/50 backdrop-blur-sm border-white/60">
             <CardHeader className="text-center pb-4">
               <CardTitle className="text-xl md:text-2xl text-primary">Оставить отзыв</CardTitle>
               <CardDescription className="text-sm md:text-base">Поделитесь своим опытом использования зоотакси</CardDescription>
