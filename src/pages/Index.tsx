@@ -17,6 +17,7 @@ import PhoneButton from '@/components/PhoneButton';
 const Index = () => {
   const [contacts, setContacts] = useState({ phone: '79685227272', telegram: 'zootaxi_uyut', whatsapp: '79685227272' });
   const [swipeIndicator, setSwipeIndicator] = useState<{ show: boolean; direction: 'up' | 'down' }>({ show: false, direction: 'up' });
+  const [showFloatingButtons, setShowFloatingButtons] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number>(0);
   const touchEndY = useRef<number>(0);
@@ -26,6 +27,23 @@ const Index = () => {
     if (savedContacts) {
       setContacts(JSON.parse(savedContacts));
     }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const heroSection = document.getElementById('hero');
+      if (heroSection) {
+        const heroBottom = heroSection.getBoundingClientRect().bottom;
+        setShowFloatingButtons(heroBottom < 0);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   useEffect(() => {
@@ -165,9 +183,13 @@ const Index = () => {
       </div>
       <Footer contacts={contacts} />
       
-      <PhoneButton />
-      <WhatsAppButton />
-      <TelegramButton />
+      {showFloatingButtons && (
+        <>
+          <PhoneButton />
+          <WhatsAppButton />
+          <TelegramButton />
+        </>
+      )}
       
       {swipeIndicator.show && (
         <div className="md:hidden fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
