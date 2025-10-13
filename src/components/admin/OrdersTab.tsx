@@ -200,31 +200,64 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                       <span className="hidden sm:inline">Подробнее</span>
                     </Button>
                     {order.status === 'new' && (
-                      <Button 
-                        size="sm"
-                        onClick={() => onUpdateStatus(order.id, 'confirmed')}
-                        className="text-xs md:text-sm px-2 md:px-3"
-                      >
-                        Подтвердить
-                      </Button>
+                      <>
+                        <Button 
+                          size="sm"
+                          onClick={() => onUpdateStatus(order.id, 'confirmed')}
+                          className="text-xs md:text-sm px-2 md:px-3"
+                        >
+                          Подтвердить
+                        </Button>
+                        <Button 
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onUpdateStatus(order.id, 'cancelled')}
+                          className="text-xs md:text-sm px-2 md:px-3 text-red-600 hover:text-red-700"
+                        >
+                          <Icon name="X" size={14} className="md:mr-1" />
+                          <span className="hidden sm:inline">Отменить</span>
+                        </Button>
+                      </>
                     )}
                     {order.status === 'confirmed' && (
-                      <Button 
-                        size="sm"
-                        onClick={() => onUpdateStatus(order.id, 'in_progress')}
-                        className="text-xs md:text-sm px-2 md:px-3"
-                      >
-                        В работу
-                      </Button>
+                      <>
+                        <Button 
+                          size="sm"
+                          onClick={() => onUpdateStatus(order.id, 'in_progress')}
+                          className="text-xs md:text-sm px-2 md:px-3"
+                        >
+                          В работу
+                        </Button>
+                        <Button 
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onUpdateStatus(order.id, 'cancelled')}
+                          className="text-xs md:text-sm px-2 md:px-3 text-red-600 hover:text-red-700"
+                        >
+                          <Icon name="X" size={14} className="md:mr-1" />
+                          <span className="hidden sm:inline">Отменить</span>
+                        </Button>
+                      </>
                     )}
                     {order.status === 'in_progress' && (
-                      <Button 
-                        size="sm"
-                        onClick={() => onUpdateStatus(order.id, 'completed')}
-                        className="text-xs md:text-sm px-2 md:px-3"
-                      >
-                        Завершить
-                      </Button>
+                      <>
+                        <Button 
+                          size="sm"
+                          onClick={() => onUpdateStatus(order.id, 'completed')}
+                          className="text-xs md:text-sm px-2 md:px-3"
+                        >
+                          Завершить
+                        </Button>
+                        <Button 
+                          size="sm"
+                          variant="outline"
+                          onClick={() => onUpdateStatus(order.id, 'cancelled')}
+                          className="text-xs md:text-sm px-2 md:px-3 text-red-600 hover:text-red-700"
+                        >
+                          <Icon name="X" size={14} className="md:mr-1" />
+                          <span className="hidden sm:inline">Отменить</span>
+                        </Button>
+                      </>
                     )}
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
