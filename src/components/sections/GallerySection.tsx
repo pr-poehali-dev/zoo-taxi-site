@@ -4,10 +4,10 @@ import Icon from '@/components/ui/icon';
 
 const GallerySection = () => {
   return (
-    <section className="py-16 px-4 bg-gray-50">
+    <section className="py-12 md:py-16 px-4 bg-gray-50">
       <div className="container mx-auto">
-        <h3 className="text-3xl font-bold text-center mb-12">Как мы перевозим ваших питомцев</h3>
-        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+        <h3 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12">Как мы перевозим ваших питомцев</h3>
+        <p className="text-center text-sm md:text-base text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto px-4">
           Каждое животное путешествует в комфортных и безопасных условиях, подходящих именно для его размера и характера
         </p>
         
