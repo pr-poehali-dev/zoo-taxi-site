@@ -10,30 +10,42 @@ interface AdminHeaderProps {
 
 const AdminHeader: React.FC<AdminHeaderProps> = ({ onRefresh, loading, onLogout }) => {
   return (
-    <header className="bg-white shadow-sm border-b">
-      <div className="container mx-auto px-4 py-4">
+    <header className="bg-white shadow-sm border-b sticky top-0 z-40">
+      <div className="container mx-auto px-3 md:px-4 py-3 md:py-4">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Icon name="Shield" className="text-primary" size={32} />
-            <h1 className="text-2xl font-bold">Админ панель ЗооТакси УЮТ</h1>
+          <div className="flex items-center gap-2 md:gap-3">
+            <Icon name="Shield" className="text-primary" size={24} />
+            <h1 className="text-base md:text-2xl font-bold truncate">Админ панель</h1>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5 md:gap-2">
             <Button 
               variant="outline" 
               onClick={onRefresh}
               disabled={loading}
+              size="sm"
+              className="px-2 md:px-4"
             >
-              <Icon name="RefreshCw" size={16} className="mr-2" />
-              Обновить
+              <Icon name="RefreshCw" size={16} className="md:mr-2" />
+              <span className="hidden md:inline">Обновить</span>
             </Button>
-            <Button variant="outline" onClick={() => window.location.href = '/'}>
-              <Icon name="Home" size={16} className="mr-2" />
-              На главную
+            <Button 
+              variant="outline" 
+              onClick={() => window.location.href = '/'}
+              size="sm"
+              className="px-2 md:px-4"
+            >
+              <Icon name="Home" size={16} className="md:mr-2" />
+              <span className="hidden md:inline">Главная</span>
             </Button>
             {onLogout && (
-              <Button variant="outline" onClick={onLogout}>
-                <Icon name="LogOut" size={16} className="mr-2" />
-                Выйти
+              <Button 
+                variant="outline" 
+                onClick={onLogout}
+                size="sm"
+                className="px-2 md:px-4"
+              >
+                <Icon name="LogOut" size={16} className="md:mr-2" />
+                <span className="hidden md:inline">Выйти</span>
               </Button>
             )}
           </div>

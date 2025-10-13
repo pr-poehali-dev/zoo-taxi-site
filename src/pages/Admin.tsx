@@ -150,7 +150,7 @@ const Admin: React.FC = () => {
     <div className="min-h-screen bg-gray-50">
       <AdminHeader onRefresh={loadData} loading={loading} onLogout={handleLogout} />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-3 md:px-4 py-4 md:py-8">
         <StatisticsCards orders={orders} reviews={reviews} />
 
         <AdminTabs
