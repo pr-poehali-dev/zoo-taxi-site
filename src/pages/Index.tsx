@@ -15,6 +15,7 @@ import TelegramButton from '@/components/TelegramButton';
 
 const Index = () => {
   const [contacts, setContacts] = useState({ phone: '79685227272', telegram: 'zootaxi_uyut', whatsapp: '79685227272' });
+  const [swipeIndicator, setSwipeIndicator] = useState<{ show: boolean; direction: 'up' | 'down' }>({ show: false, direction: 'up' });
   const containerRef = useRef<HTMLDivElement>(null);
   const touchStartY = useRef<number>(0);
   const touchEndY = useRef<number>(0);
@@ -35,6 +36,14 @@ const Index = () => {
 
     const handleTouchMove = (e: TouchEvent) => {
       touchEndY.current = e.touches[0].clientY;
+      const swipeDistance = touchStartY.current - touchEndY.current;
+      
+      if (Math.abs(swipeDistance) > 30) {
+        setSwipeIndicator({ 
+          show: true, 
+          direction: swipeDistance > 0 ? 'up' : 'down' 
+        });
+      }
     };
 
     const smoothScrollToSection = (element: HTMLElement) => {
@@ -56,6 +65,8 @@ const Index = () => {
     };
 
     const handleTouchEnd = () => {
+      setSwipeIndicator({ show: false, direction: 'up' });
+      
       const swipeDistance = touchStartY.current - touchEndY.current;
       const minSwipeDistance = 80;
 
@@ -155,6 +166,20 @@ const Index = () => {
       
       <WhatsAppButton />
       <TelegramButton />
+      
+      {swipeIndicator.show && (
+        <div className="md:hidden fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+          <div 
+            className={`transition-all duration-300 ${
+              swipeIndicator.direction === 'up' 
+                ? 'animate-slide-up' 
+                : 'animate-slide-down'
+            }`}
+          >
+            <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full shadow-lg shadow-blue-500/50" />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
