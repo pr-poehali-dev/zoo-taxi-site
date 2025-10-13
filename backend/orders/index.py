@@ -178,38 +178,63 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             }
         
         elif method == 'PUT':
-            # Обновление статуса заявки
+            # Обновление заявки (статус и/или цена)
             body_data = json.loads(event.get('body', '{}'))
             order_id = body_data.get('id')
             new_status = body_data.get('status')
+            estimated_price = body_data.get('estimated_price')
             
-            if not order_id or not new_status:
+            if not order_id:
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
                     'isBase64Encoded': False,
-                    'body': json.dumps({'error': 'ID заявки и новый статус обязательны'})
+                    'body': json.dumps({'error': 'ID заявки обязателен'})
                 }
             
-            # Проверяем валидность статуса
-            valid_statuses = ['new', 'confirmed', 'in_progress', 'completed', 'cancelled']
-            if new_status not in valid_statuses:
+            # Проверяем, что есть хотя бы одно поле для обновления
+            if not new_status and estimated_price is None:
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
                     'isBase64Encoded': False,
-                    'body': json.dumps({'error': 'Некорректный статус'})
+                    'body': json.dumps({'error': 'Необходимо указать статус или цену для обновления'})
                 }
             
-            # Обновляем статус заявки
-            update_query = """
+            # Проверяем валидность статуса, если он указан
+            if new_status:
+                valid_statuses = ['new', 'confirmed', 'in_progress', 'completed', 'cancelled']
+                if new_status not in valid_statuses:
+                    return {
+                        'statusCode': 400,
+                        'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
+                        'isBase64Encoded': False,
+                        'body': json.dumps({'error': 'Некорректный статус'})
+                    }
+            
+            # Формируем динамический запрос обновления
+            update_fields = []
+            update_params = []
+            
+            if new_status:
+                update_fields.append('status = %s')
+                update_params.append(new_status)
+            
+            if estimated_price is not None:
+                update_fields.append('estimated_price = %s')
+                update_params.append(estimated_price)
+            
+            update_fields.append('updated_at = CURRENT_TIMESTAMP')
+            update_params.append(order_id)
+            
+            update_query = f"""
                 UPDATE orders 
-                SET status = %s, updated_at = CURRENT_TIMESTAMP 
+                SET {', '.join(update_fields)}
                 WHERE id = %s
-                RETURNING id, status
+                RETURNING id, status, estimated_price
             """
             
-            cursor.execute(update_query, [new_status, order_id])
+            cursor.execute(update_query, update_params)
             result = cursor.fetchone()
             
             if not result:
@@ -229,7 +254,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 'body': json.dumps({
                     'id': result[0],
                     'status': result[1],
-                    'message': 'Статус заявки обновлен'
+                    'estimated_price': float(result[2]) if result[2] else None,
+                    'message': 'Заявка обновлена'
                 })
             }
         
