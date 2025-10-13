@@ -37,28 +37,30 @@ const HeroSection: React.FC<HeroSectionProps> = ({ contacts }) => {
           <div className="flex flex-col gap-3 max-w-md mx-auto px-4">
             <Button 
               size="lg" 
-              className="animate-scale-in text-base md:text-lg w-full py-6 md:py-7 shadow-2xl hover:scale-[1.02] active:scale-95 transition-transform" 
+              className="animate-scale-in text-base md:text-lg w-full py-5 md:py-6 shadow-2xl hover:scale-[1.02] active:scale-95 transition-transform rounded-xl font-semibold" 
               onClick={() => document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' })}
             >
-              <Icon name="Phone" size={22} className="mr-2" />
+              <Icon name="Phone" size={20} className="mr-2" />
               Заказать сейчас
             </Button>
-            <Button 
-              size="lg" 
-              className="animate-scale-in bg-green-500 hover:bg-green-600 text-white text-base md:text-lg w-full py-6 md:py-7 shadow-2xl hover:scale-[1.02] active:scale-95 transition-transform"
-              onClick={() => window.open(`https://wa.me/${contacts.whatsapp}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`, '_blank')}
-            >
-              <Icon name="MessageCircle" size={22} className="mr-2" />
-              WhatsApp
-            </Button>
-            <Button 
-              size="lg" 
-              className="animate-scale-in bg-[#0088cc] hover:bg-[#0077b5] text-white text-base md:text-lg w-full py-6 md:py-7 shadow-2xl hover:scale-[1.02] active:scale-95 transition-transform"
-              onClick={() => window.open(`https://t.me/${contacts.telegram}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`, '_blank')}
-            >
-              <Icon name="Send" size={22} className="mr-2" />
-              Telegram
-            </Button>
+            <div className="flex gap-3">
+              <Button 
+                size="lg" 
+                className="animate-scale-in bg-green-500 hover:bg-green-600 text-white text-sm md:text-base flex-1 py-4 md:py-5 shadow-xl hover:scale-[1.02] active:scale-95 transition-transform rounded-xl font-semibold"
+                onClick={() => window.open(`https://wa.me/${contacts.whatsapp}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`, '_blank')}
+              >
+                <Icon name="MessageCircle" size={20} className="mr-1.5" />
+                WhatsApp
+              </Button>
+              <Button 
+                size="lg" 
+                className="animate-scale-in bg-[#0088cc] hover:bg-[#0077b5] text-white text-sm md:text-base flex-1 py-4 md:py-5 shadow-xl hover:scale-[1.02] active:scale-95 transition-transform rounded-xl font-semibold"
+                onClick={() => window.open(`https://t.me/${contacts.telegram}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`, '_blank')}
+              >
+                <Icon name="Send" size={20} className="mr-1.5" />
+                Telegram
+              </Button>
+            </div>
           </div>
         </div>
       </div>

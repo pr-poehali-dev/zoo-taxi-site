@@ -20,11 +20,11 @@ const WhatsAppButton = () => {
     <div className="fixed bottom-6 right-6 z-50">
       <Button
         size="lg"
-        className="rounded-full w-16 h-16 bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-xl transition-all duration-300 animate-bounce"
+        className="rounded-full w-14 h-14 bg-green-500 hover:bg-green-600 text-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95"
         onClick={() => window.open(whatsappUrl, '_blank')}
         title="Написать в WhatsApp"
       >
-        <Icon name="MessageCircle" size={28} />
+        <Icon name="MessageCircle" size={24} />
       </Button>
     </div>
   );
