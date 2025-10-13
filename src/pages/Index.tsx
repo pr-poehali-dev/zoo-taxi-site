@@ -33,10 +33,10 @@ const Index = () => {
       <ReviewsSection />
       <PassengersGallery />
       
-      <section id="booking" className="py-16 px-4 bg-gradient-to-br from-blue-50 to-white">
+      <section id="booking" className="py-12 md:py-16 px-4 bg-gradient-to-br from-blue-50 to-white">
         <div className="container mx-auto max-w-4xl">
-          <h2 className="text-4xl font-bold text-center mb-4">🚗 Оформить заказ</h2>
-          <p className="text-center text-gray-600 mb-12">Заполните форму, и мы свяжемся с вами в ближайшее время</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-3 md:mb-4">🚗 Оформить заказ</h2>
+          <p className="text-center text-sm md:text-base text-gray-600 mb-8 md:mb-12 px-4">Заполните форму, и мы свяжемся с вами в ближайшее время</p>
           <OrderForm />
         </div>
       </section>

@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 
 const Header = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const scrollToSection = (id: string) => {
+    const element = document.querySelector(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+      setMobileMenuOpen(false);
+    }
+  };
+
   return (
     <header className="bg-white shadow-sm sticky top-0 z-50 relative overflow-hidden">
       <div 
@@ -13,11 +23,11 @@ const Header = () => {
           backgroundRepeat: 'repeat'
         }}
       ></div>
-      <div className="container mx-auto px-4 py-4 relative z-10">
+      <div className="container mx-auto px-4 py-3 md:py-4 relative z-10">
         <nav className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <Icon name="Car" className="text-primary" size={32} />
-            <h1 className="text-2xl font-bold text-primary">ЗооТакси УЮТ</h1>
+            <Icon name="Car" className="text-primary" size={28} />
+            <h1 className="text-xl md:text-2xl font-bold text-primary">ЗооТакси УЮТ</h1>
           </div>
           <div className="hidden md:flex space-x-6">
             <a href="#services" className="hover:text-primary transition-colors">Услуги</a>
@@ -34,12 +44,59 @@ const Header = () => {
             >
               <Icon name="Settings" size={20} />
             </Button>
-            <Button className="md:hidden">
-              <Icon name="Menu" size={20} />
+            <Button 
+              variant="outline"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            >
+              <Icon name={mobileMenuOpen ? "X" : "Menu"} size={20} />
             </Button>
           </div>
         </nav>
       </div>
+
+      {mobileMenuOpen && (
+        <div className="md:hidden bg-white border-t shadow-lg">
+          <nav className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+            <button 
+              onClick={() => scrollToSection('#services')}
+              className="text-left py-3 px-4 hover:bg-gray-50 rounded-lg transition-colors flex items-center"
+            >
+              <Icon name="Sparkles" size={20} className="mr-3 text-primary" />
+              <span className="font-medium">Услуги</span>
+            </button>
+            <button 
+              onClick={() => scrollToSection('#reviews')}
+              className="text-left py-3 px-4 hover:bg-gray-50 rounded-lg transition-colors flex items-center"
+            >
+              <Icon name="Star" size={20} className="mr-3 text-primary" />
+              <span className="font-medium">Отзывы</span>
+            </button>
+            <button 
+              onClick={() => scrollToSection('#booking')}
+              className="text-left py-3 px-4 hover:bg-gray-50 rounded-lg transition-colors flex items-center"
+            >
+              <Icon name="Calendar" size={20} className="mr-3 text-primary" />
+              <span className="font-medium">Заказать</span>
+            </button>
+            <button 
+              onClick={() => scrollToSection('#contacts')}
+              className="text-left py-3 px-4 hover:bg-gray-50 rounded-lg transition-colors flex items-center"
+            >
+              <Icon name="Phone" size={20} className="mr-3 text-primary" />
+              <span className="font-medium">Контакты</span>
+            </button>
+            <button 
+              onClick={() => window.location.href = '/admin'}
+              className="sm:hidden text-left py-3 px-4 hover:bg-gray-50 rounded-lg transition-colors flex items-center border-t pt-4"
+            >
+              <Icon name="Settings" size={20} className="mr-3 text-gray-600" />
+              <span className="font-medium text-gray-600">Админ-панель</span>
+            </button>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };

@@ -167,20 +167,20 @@ const OrderForm: React.FC = () => {
 
   return (
     <Card className="max-w-4xl mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="text-2xl flex items-center justify-center gap-2">
-          <Icon name="Car" className="text-primary" size={28} />
+      <CardHeader className="text-center pb-4">
+        <CardTitle className="text-xl md:text-2xl flex items-center justify-center gap-2">
+          <Icon name="Car" className="text-primary" size={24} />
           Заказать зоотакси
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-sm md:text-base">
           Заполните форму и мы свяжемся с вами в течение 15 минут для подтверждения заказа
         </CardDescription>
       </CardHeader>
       
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+      <CardContent className="px-4 md:px-6">
+        <form onSubmit={handleSubmit} className="space-y-5 md:space-y-6">
           {/* Контактная информация */}
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-3 md:gap-4">
             <div>
               <label className="block text-sm font-medium mb-2">Ваше имя *</label>
               <Input
@@ -215,13 +215,13 @@ const OrderForm: React.FC = () => {
           </div>
 
           {/* Информация о питомце */}
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <div className="border-t pt-5 md:pt-6">
+            <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2">
               <Icon name="Heart" className="text-primary" size={20} />
               Информация о питомце
             </h3>
             
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-3 md:gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Кличка питомца</label>
                 <Input
@@ -274,32 +274,33 @@ const OrderForm: React.FC = () => {
               </div>
             </div>
 
-            <div className="mt-4">
+            <div className="mt-3 md:mt-4">
               <label className="block text-sm font-medium mb-2">Особые потребности</label>
               <Textarea
                 name="petSpecialNeeds"
                 value={formData.petSpecialNeeds}
                 onChange={handleChange}
                 placeholder="Особенности характера, лекарства, страхи и т.д."
-                rows={3}
+                rows={2}
+                className="min-h-[60px]"
               />
             </div>
           </div>
 
           {/* Детали поездки */}
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <div className="border-t pt-5 md:pt-6">
+            <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4 flex items-center gap-2">
               <Icon name="MapPin" className="text-primary" size={20} />
               Детали поездки
             </h3>
             
-            <div className="mb-4">
+            <div className="mb-3 md:mb-4">
               <label className="block text-sm font-medium mb-2">Тип услуги *</label>
               <select
                 name="serviceType"
                 value={formData.serviceType}
                 onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary"
+                className="w-full p-3 md:p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary focus:border-primary text-base"
                 required
               >
                 <option value="">Выберите услугу</option>
@@ -362,10 +363,10 @@ const OrderForm: React.FC = () => {
           </div>
 
           {/* Дополнительная информация */}
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold mb-4">Дополнительно</h3>
+          <div className="border-t pt-5 md:pt-6">
+            <h3 className="text-base md:text-lg font-semibold mb-3 md:mb-4">Дополнительно</h3>
             
-            <div className="space-y-4">
+            <div className="space-y-3 md:space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Дополнительные услуги</label>
                 <Textarea
@@ -374,6 +375,7 @@ const OrderForm: React.FC = () => {
                   onChange={handleChange}
                   placeholder="Ожидание у ветеринара, помощь с переноской и т.д."
                   rows={2}
+                  className="min-h-[60px]"
                 />
               </div>
               <div>
@@ -383,16 +385,17 @@ const OrderForm: React.FC = () => {
                   value={formData.comments}
                   onChange={handleChange}
                   placeholder="Любая дополнительная информация"
-                  rows={3}
+                  rows={2}
+                  className="min-h-[60px]"
                 />
               </div>
             </div>
           </div>
 
-          <div className="pt-6">
+          <div className="pt-5 md:pt-6">
             <Button 
               type="submit" 
-              className="w-full text-lg py-3"
+              className="w-full text-base md:text-lg py-6 md:py-7"
               disabled={isSubmitting}
             >
               {isSubmitting ? (
