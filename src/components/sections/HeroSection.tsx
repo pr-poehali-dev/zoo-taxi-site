@@ -34,51 +34,51 @@ const HeroSection: React.FC<HeroSectionProps> = ({ contacts }) => {
             Профессиональный сервис перевозки животных с комфортными автомобилями 
             и опытными водителями. Работаем круглосуточно.
           </p>
-          <div className="flex flex-col gap-3 max-w-md mx-auto px-6">
+          <div className="flex flex-col gap-4 max-w-md mx-auto px-6">
             <Button 
               size="lg" 
               className="animate-scale-in text-base md:text-lg w-full py-4 md:py-5 shadow-2xl hover:scale-[1.02] active:scale-[0.98] transition-transform rounded-xl font-semibold" 
               onClick={() => {
                 if (navigator.vibrate) navigator.vibrate(50);
-                window.location.href = `tel:+${contacts.phone}`;
+                document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
               }}
             >
-              <Icon name="Phone" size={20} className="mr-2" />
-              Позвонить сейчас
+              <Icon name="FileText" size={20} className="mr-2" />
+              Заказать
             </Button>
-            <div className="flex gap-3 justify-center items-center">
+            <div className="flex gap-4 justify-center items-center">
               <Button 
                 size="default" 
-                className="animate-scale-in rounded-full w-14 h-14 md:w-16 md:h-16 shadow-lg hover:scale-110 active:scale-95 transition-transform p-0"
+                className="animate-scale-in bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16 md:w-20 md:h-20 shadow-xl hover:scale-110 active:scale-95 transition-transform p-0"
                 onClick={() => {
                   if (navigator.vibrate) navigator.vibrate(50);
-                  document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
+                  window.location.href = `tel:+${contacts.phone}`;
                 }}
-                title="Заказать"
+                title="Позвонить"
               >
-                <Icon name="FileText" size={22} />
+                <Icon name="Phone" size={26} />
               </Button>
               <Button 
                 size="default" 
-                className="animate-scale-in bg-green-500 hover:bg-green-600 text-white rounded-full w-14 h-14 md:w-16 md:h-16 shadow-lg hover:scale-110 active:scale-95 transition-transform p-0"
+                className="animate-scale-in bg-green-500 hover:bg-green-600 text-white rounded-full w-16 h-16 md:w-20 md:h-20 shadow-xl hover:scale-110 active:scale-95 transition-transform p-0"
                 onClick={() => {
                   if (navigator.vibrate) navigator.vibrate(50);
                   window.open(`https://wa.me/${contacts.whatsapp}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`, '_blank');
                 }}
                 title="WhatsApp"
               >
-                <Icon name="MessageCircle" size={22} />
+                <Icon name="MessageCircle" size={26} />
               </Button>
               <Button 
                 size="default" 
-                className="animate-scale-in bg-[#0088cc] hover:bg-[#0077b5] text-white rounded-full w-14 h-14 md:w-16 md:h-16 shadow-lg hover:scale-110 active:scale-95 transition-transform p-0"
+                className="animate-scale-in bg-[#0088cc] hover:bg-[#0077b5] text-white rounded-full w-16 h-16 md:w-20 md:h-20 shadow-xl hover:scale-110 active:scale-95 transition-transform p-0"
                 onClick={() => {
                   if (navigator.vibrate) navigator.vibrate(50);
                   window.open(`https://t.me/${contacts.telegram}?text=Здравствуйте! Хочу заказать зоотакси для моего питомца`, '_blank');
                 }}
                 title="Telegram"
               >
-                <Icon name="Send" size={22} />
+                <Icon name="Send" size={26} />
               </Button>
             </div>
           </div>
