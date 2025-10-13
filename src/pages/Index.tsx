@@ -13,6 +13,7 @@ import Footer from '@/components/sections/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
 import TelegramButton from '@/components/TelegramButton';
 import PhoneButton from '@/components/PhoneButton';
+import FloatingPaws from '@/components/FloatingPaws';
 import { useVisitTracker } from '@/hooks/useVisitTracker';
 
 const Index = () => {
@@ -49,6 +50,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
+      <FloatingPaws />
       <Header />
       <div id="hero">
         <HeroSection contacts={contacts} />
