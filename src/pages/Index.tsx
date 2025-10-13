@@ -27,6 +27,8 @@ const Index = () => {
   }, []);
 
   useEffect(() => {
+    let isScrolling = false;
+    
     const handleTouchStart = (e: TouchEvent) => {
       touchStartY.current = e.touches[0].clientY;
     };
@@ -35,11 +37,29 @@ const Index = () => {
       touchEndY.current = e.touches[0].clientY;
     };
 
+    const smoothScrollToSection = (element: HTMLElement) => {
+      if (isScrolling) return;
+      isScrolling = true;
+      
+      const headerOffset = 70;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+
+      setTimeout(() => {
+        isScrolling = false;
+      }, 1000);
+    };
+
     const handleTouchEnd = () => {
       const swipeDistance = touchStartY.current - touchEndY.current;
-      const minSwipeDistance = 50;
+      const minSwipeDistance = 80;
 
-      if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (Math.abs(swipeDistance) > minSwipeDistance && !isScrolling) {
         const sections = [
           'hero',
           'services', 
@@ -52,7 +72,7 @@ const Index = () => {
           'contacts'
         ];
 
-        const currentScrollPosition = window.scrollY;
+        const currentScrollPosition = window.scrollY + 150;
         let currentSectionIndex = 0;
 
         for (let i = 0; i < sections.length; i++) {
@@ -61,7 +81,7 @@ const Index = () => {
             const rect = element.getBoundingClientRect();
             const elementTop = rect.top + window.scrollY;
             
-            if (currentScrollPosition >= elementTop - 100) {
+            if (currentScrollPosition >= elementTop) {
               currentSectionIndex = i;
             }
           }
@@ -70,12 +90,12 @@ const Index = () => {
         if (swipeDistance > 0 && currentSectionIndex < sections.length - 1) {
           const nextSection = document.getElementById(sections[currentSectionIndex + 1]);
           if (nextSection) {
-            nextSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            smoothScrollToSection(nextSection);
           }
         } else if (swipeDistance < 0 && currentSectionIndex > 0) {
           const prevSection = document.getElementById(sections[currentSectionIndex - 1]);
           if (prevSection) {
-            prevSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            smoothScrollToSection(prevSection);
           }
         }
       }
@@ -83,8 +103,8 @@ const Index = () => {
 
     const container = containerRef.current;
     if (container && window.innerWidth <= 768) {
-      container.addEventListener('touchstart', handleTouchStart);
-      container.addEventListener('touchmove', handleTouchMove);
+      container.addEventListener('touchstart', handleTouchStart, { passive: true });
+      container.addEventListener('touchmove', handleTouchMove, { passive: true });
       container.addEventListener('touchend', handleTouchEnd);
 
       return () => {
@@ -135,13 +155,6 @@ const Index = () => {
       
       <WhatsAppButton />
       <TelegramButton />
-      
-      {/* Swipe indicator for mobile */}
-      <div className="md:hidden fixed bottom-20 left-1/2 transform -translate-x-1/2 z-40 pointer-events-none">
-        <div className="bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full">
-          <p className="text-white text-xs font-medium">👆 Свайп вверх/вниз для навигации</p>
-        </div>
-      </div>
     </div>
   );
 };
