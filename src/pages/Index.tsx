@@ -16,11 +16,7 @@ import PhoneButton from '@/components/PhoneButton';
 
 const Index = () => {
   const [contacts, setContacts] = useState({ phone: '79685227272', telegram: 'zootaxi_uyut', whatsapp: '79685227272' });
-  const [swipeIndicator, setSwipeIndicator] = useState<{ show: boolean; direction: 'up' | 'down' }>({ show: false, direction: 'up' });
   const [showFloatingButtons, setShowFloatingButtons] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const touchStartY = useRef<number>(0);
-  const touchEndY = useRef<number>(0);
   
   useEffect(() => {
     const savedContacts = localStorage.getItem('contacts');
@@ -46,107 +42,10 @@ const Index = () => {
     };
   }, []);
 
-  useEffect(() => {
-    let isScrolling = false;
-    
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0].clientY;
-    };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      touchEndY.current = e.touches[0].clientY;
-      const swipeDistance = touchStartY.current - touchEndY.current;
-      
-      if (Math.abs(swipeDistance) > 30) {
-        setSwipeIndicator({ 
-          show: true, 
-          direction: swipeDistance > 0 ? 'up' : 'down' 
-        });
-      }
-    };
-
-    const smoothScrollToSection = (element: HTMLElement) => {
-      if (isScrolling) return;
-      isScrolling = true;
-      
-      const headerOffset = 70;
-      const elementPosition = element.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - headerOffset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-
-      setTimeout(() => {
-        isScrolling = false;
-      }, 1000);
-    };
-
-    const handleTouchEnd = () => {
-      setSwipeIndicator({ show: false, direction: 'up' });
-      
-      const swipeDistance = touchStartY.current - touchEndY.current;
-      const minSwipeDistance = 80;
-
-      if (Math.abs(swipeDistance) > minSwipeDistance && !isScrolling) {
-        const sections = [
-          'hero',
-          'services', 
-          'gallery',
-          'advantages',
-          'reviews',
-          'passengers',
-          'booking',
-          'faq',
-          'contacts'
-        ];
-
-        const currentScrollPosition = window.scrollY + 150;
-        let currentSectionIndex = 0;
-
-        for (let i = 0; i < sections.length; i++) {
-          const element = document.getElementById(sections[i]);
-          if (element) {
-            const rect = element.getBoundingClientRect();
-            const elementTop = rect.top + window.scrollY;
-            
-            if (currentScrollPosition >= elementTop) {
-              currentSectionIndex = i;
-            }
-          }
-        }
-
-        if (swipeDistance > 0 && currentSectionIndex < sections.length - 1) {
-          const nextSection = document.getElementById(sections[currentSectionIndex + 1]);
-          if (nextSection) {
-            smoothScrollToSection(nextSection);
-          }
-        } else if (swipeDistance < 0 && currentSectionIndex > 0) {
-          const prevSection = document.getElementById(sections[currentSectionIndex - 1]);
-          if (prevSection) {
-            smoothScrollToSection(prevSection);
-          }
-        }
-      }
-    };
-
-    const container = containerRef.current;
-    if (container && window.innerWidth <= 768) {
-      container.addEventListener('touchstart', handleTouchStart, { passive: true });
-      container.addEventListener('touchmove', handleTouchMove, { passive: true });
-      container.addEventListener('touchend', handleTouchEnd);
-
-      return () => {
-        container.removeEventListener('touchstart', handleTouchStart);
-        container.removeEventListener('touchmove', handleTouchMove);
-        container.removeEventListener('touchend', handleTouchEnd);
-      };
-    }
-  }, []);
 
   return (
-    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
       <Header />
       <div id="hero">
         <HeroSection contacts={contacts} />
@@ -189,20 +88,6 @@ const Index = () => {
           <WhatsAppButton />
           <TelegramButton />
         </>
-      )}
-      
-      {swipeIndicator.show && (
-        <div className="md:hidden fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
-          <div 
-            className={`transition-all duration-300 ${
-              swipeIndicator.direction === 'up' 
-                ? 'animate-slide-up' 
-                : 'animate-slide-down'
-            }`}
-          >
-            <div className="w-16 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full shadow-lg shadow-blue-500/50" />
-          </div>
-        </div>
       )}
     </div>
   );
