@@ -28,12 +28,11 @@ const Header = () => {
           <div className="flex items-center gap-2">
             <Button 
               variant="outline" 
-              size="sm"
+              size="icon"
               onClick={() => window.location.href = '/admin'}
               className="hidden sm:flex"
             >
-              <Icon name="Settings" size={16} className="mr-1" />
-              Админ
+              <Icon name="Settings" size={20} />
             </Button>
             <Button className="md:hidden">
               <Icon name="Menu" size={20} />
