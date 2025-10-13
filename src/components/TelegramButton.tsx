@@ -48,7 +48,7 @@ const TelegramButton: React.FC<TelegramButtonProps> = ({
   return (
     <Button
       onClick={handleClick}
-      className={`fixed bottom-24 right-6 rounded-full w-14 h-14 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 z-50 bg-[#0088cc] hover:bg-[#0077b5] ${className}`}
+      className={`fixed bottom-20 right-6 rounded-full w-12 h-12 shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 z-50 bg-[#0088cc] hover:bg-[#0077b5] ${className}`}
       title="Написать в Telegram"
     >
       <svg
