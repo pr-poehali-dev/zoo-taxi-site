@@ -130,43 +130,43 @@ const PassengersTab: React.FC<PassengersTabProps> = ({ passengers, onAdd, onTogg
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle className="flex items-center gap-2">
-              <Icon name="Image" size={24} />
-              Галерея "Наши пассажиры"
-            </CardTitle>
-            <CardDescription>Управление фотографиями питомцев</CardDescription>
-          </div>
+      <CardHeader className="p-4 md:p-6">
+        <div>
+          <CardTitle className="flex items-center gap-2 text-lg md:text-xl">
+            <Icon name="Image" size={20} />
+            Галерея "Наши пассажиры"
+          </CardTitle>
+          <CardDescription className="text-xs md:text-sm">Управление фотографиями питомцев</CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="mb-6 p-4 border rounded-lg bg-gray-50">
-          <h3 className="font-semibold mb-4 flex items-center gap-2">
-            <Icon name="Plus" size={20} />
+      <CardContent className="p-3 md:p-6">
+        <div className="mb-4 md:mb-6 p-3 md:p-4 border rounded-lg bg-gray-50">
+          <h3 className="font-semibold mb-3 md:mb-4 flex items-center gap-2 text-sm md:text-base">
+            <Icon name="Plus" size={18} />
             Добавить фото
           </h3>
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="space-y-3 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
             <Input
               placeholder="Кличка питомца"
               value={newPassenger.pet_name}
               onChange={(e) => setNewPassenger({...newPassenger, pet_name: e.target.value})}
+              className="text-sm"
             />
             <Input
-              placeholder="Тип животного (собака, кошка...)"
+              placeholder="Тип животного"
               value={newPassenger.pet_type}
               onChange={(e) => setNewPassenger({...newPassenger, pet_type: e.target.value})}
+              className="text-sm"
             />
             
             <div className="md:col-span-2 space-y-3">
               <div className="flex gap-2">
                 <div className="flex-1">
                   <label className="block">
-                    <div className="flex items-center justify-center px-4 py-3 border-2 border-dashed border-primary/30 rounded-lg cursor-pointer hover:border-primary/50 transition-colors bg-white">
-                      <Icon name={uploadingImage ? "Loader2" : "Upload"} size={20} className={`mr-2 ${uploadingImage ? 'animate-spin' : ''}`} />
-                      <span className="text-sm font-medium">
-                        {uploadingImage ? 'Загрузка...' : 'Загрузить фото с компьютера'}
+                    <div className="flex items-center justify-center px-3 md:px-4 py-2 md:py-3 border-2 border-dashed border-primary/30 rounded-lg cursor-pointer hover:border-primary/50 transition-colors bg-white">
+                      <Icon name={uploadingImage ? "Loader2" : "Upload"} size={18} className={`mr-2 ${uploadingImage ? 'animate-spin' : ''}`} />
+                      <span className="text-xs md:text-sm font-medium">
+                        {uploadingImage ? 'Загрузка...' : 'Загрузить фото'}
                       </span>
                     </div>
                     <input
@@ -183,9 +183,10 @@ const PassengersTab: React.FC<PassengersTabProps> = ({ passengers, onAdd, onTogg
               <div className="text-center text-sm text-gray-500">или</div>
               
               <Input
-                placeholder="Вставьте URL фотографии"
+                placeholder="URL фотографии"
                 value={newPassenger.photo_url}
                 onChange={(e) => setNewPassenger({...newPassenger, photo_url: e.target.value})}
+                className="text-sm"
               />
               
               {newPassenger.photo_url && (
@@ -207,21 +208,22 @@ const PassengersTab: React.FC<PassengersTabProps> = ({ passengers, onAdd, onTogg
               placeholder="Описание (необязательно)"
               value={newPassenger.description}
               onChange={(e) => setNewPassenger({...newPassenger, description: e.target.value})}
-              className="md:col-span-2"
+              className="md:col-span-2 text-sm"
               rows={2}
             />
           </div>
           <Button 
             onClick={handleAddPassenger} 
             disabled={isAddingPassenger || !newPassenger.photo_url || uploadingImage}
-            className="mt-4"
+            className="mt-3 md:mt-4 w-full md:w-auto text-sm"
+            size="sm"
           >
             <Icon name="Plus" size={16} className="mr-2" />
             {isAddingPassenger ? 'Добавление...' : 'Добавить фото'}
           </Button>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
           {passengers.map((passenger) => (
             <Card key={passenger.id} className="overflow-hidden">
               <div className="aspect-square relative">
@@ -231,36 +233,37 @@ const PassengersTab: React.FC<PassengersTabProps> = ({ passengers, onAdd, onTogg
                   className="w-full h-full object-cover"
                 />
                 {!passenger.is_published && (
-                  <Badge className="absolute top-2 right-2 bg-red-500">
+                  <Badge className="absolute top-2 right-2 bg-red-500 text-xs">
                     Скрыто
                   </Badge>
                 )}
               </div>
-              <CardContent className="p-4">
-                <div className="space-y-2">
+              <CardContent className="p-3 md:p-4">
+                <div className="space-y-1.5 md:space-y-2">
                   {passenger.pet_name && (
-                    <h4 className="font-semibold">{passenger.pet_name}</h4>
+                    <h4 className="font-semibold text-sm md:text-base line-clamp-1">{passenger.pet_name}</h4>
                   )}
                   {passenger.pet_type && (
-                    <p className="text-sm text-gray-600">{passenger.pet_type}</p>
+                    <p className="text-xs md:text-sm text-gray-600 line-clamp-1">{passenger.pet_type}</p>
                   )}
                   {passenger.description && (
-                    <p className="text-sm text-gray-500">{passenger.description}</p>
+                    <p className="text-xs md:text-sm text-gray-500 line-clamp-2">{passenger.description}</p>
                   )}
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-1.5 md:gap-2 pt-2">
                     <Button
                       size="sm"
                       variant={passenger.is_published ? "outline" : "default"}
                       onClick={() => onTogglePublish(passenger.id, passenger.is_published)}
+                      className="flex-1 text-xs md:text-sm px-2 md:px-3"
                     >
-                      <Icon name={passenger.is_published ? "EyeOff" : "Eye"} size={14} className="mr-1" />
-                      {passenger.is_published ? 'Скрыть' : 'Показать'}
+                      <Icon name={passenger.is_published ? "EyeOff" : "Eye"} size={14} className="md:mr-1" />
+                      <span className="hidden sm:inline">{passenger.is_published ? 'Скрыть' : 'Показать'}</span>
                     </Button>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
-                        <Button size="sm" variant="destructive">
-                          <Icon name="Trash2" size={14} className="mr-1" />
-                          Удалить
+                        <Button size="sm" variant="destructive" className="flex-1 text-xs md:text-sm px-2 md:px-3">
+                          <Icon name="Trash2" size={14} className="md:mr-1" />
+                          <span className="hidden sm:inline">Удалить</span>
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>

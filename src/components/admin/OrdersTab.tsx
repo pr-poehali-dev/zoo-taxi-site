@@ -67,26 +67,26 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
 
   return (
     <Card>
-      <CardHeader>
-        <div className="flex justify-between items-center">
+      <CardHeader className="p-4 md:p-6">
+        <div className="space-y-3 md:space-y-0 md:flex md:justify-between md:items-center">
           <div>
-            <CardTitle>Заявки на поездки</CardTitle>
-            <CardDescription>Управление заказами клиентов</CardDescription>
+            <CardTitle className="text-lg md:text-xl">Заявки на поездки</CardTitle>
+            <CardDescription className="text-xs md:text-sm">Управление заказами клиентов</CardDescription>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-col md:flex-row gap-2">
             <div className="relative">
               <Icon name="Search" className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
               <Input
-                placeholder="Поиск по имени, телефону, ID..."
+                placeholder="Поиск..."
                 value={orderSearchQuery}
                 onChange={(e) => setOrderSearchQuery(e.target.value)}
-                className="pl-10 w-64"
+                className="pl-10 w-full md:w-48"
               />
             </div>
             <select 
               value={orderStatusFilter} 
               onChange={(e) => setOrderStatusFilter(e.target.value)}
-              className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary"
+              className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary text-sm"
             >
               <option value="all">Все статусы</option>
               <option value="new">Новые</option>
@@ -98,43 +98,43 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
           </div>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
+      <CardContent className="p-3 md:p-6">
+        <div className="space-y-3 md:space-y-4">
           {filteredOrders.map((order) => (
             <Card key={order.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <h4 className="font-semibold text-lg">
-                      Заявка #{order.id} - {order.client_name}
+              <CardContent className="p-3 md:p-4">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2 mb-3">
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-base md:text-lg">
+                      №{order.id} - {order.client_name}
                     </h4>
-                    <p className="text-gray-600 text-sm">
-                      {new Date(order.created_at).toLocaleString('ru-RU')}
+                    <p className="text-gray-600 text-xs md:text-sm">
+                      {new Date(order.created_at).toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' })}
                     </p>
                   </div>
                   {getStatusBadge(order.status)}
                 </div>
                 
-                <div className="grid md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <p><span className="font-medium">Питомец:</span> {order.pet_name} ({order.pet_type})</p>
-                    <p><span className="font-medium">Услуга:</span> {order.service_type}</p>
-                    <p><span className="font-medium">Телефон:</span> {order.client_phone}</p>
+                <div className="space-y-2 md:grid md:grid-cols-2 md:gap-4 md:space-y-0 mb-3 md:mb-4">
+                  <div className="space-y-1">
+                    <p className="text-sm"><span className="font-medium">Питомец:</span> {order.pet_name} ({order.pet_type})</p>
+                    <p className="text-sm"><span className="font-medium">Услуга:</span> {order.service_type}</p>
+                    <p className="text-sm"><span className="font-medium">Телефон:</span> <a href={`tel:${order.client_phone}`} className="text-primary hover:underline">{order.client_phone}</a></p>
                   </div>
-                  <div>
-                    <p><span className="font-medium">Дата:</span> {order.preferred_date} в {order.preferred_time}</p>
-                    <p><span className="font-medium">Откуда:</span> {order.pickup_address}</p>
-                    <p><span className="font-medium">Куда:</span> {order.destination_address}</p>
+                  <div className="space-y-1">
+                    <p className="text-sm"><span className="font-medium">Дата:</span> {order.preferred_date} в {order.preferred_time}</p>
+                    <p className="text-sm truncate"><span className="font-medium">Откуда:</span> {order.pickup_address}</p>
+                    <p className="text-sm truncate"><span className="font-medium">Куда:</span> {order.destination_address}</p>
                   </div>
                 </div>
                 
                 {order.comments && (
-                  <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-                    <p className="text-sm"><span className="font-medium">Комментарий:</span> {order.comments}</p>
+                  <div className="mb-3 md:mb-4 p-2 md:p-3 bg-gray-50 rounded-lg">
+                    <p className="text-xs md:text-sm"><span className="font-medium">Комментарий:</span> {order.comments}</p>
                   </div>
                 )}
                 
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3">
                   <div className="flex items-center gap-2">
                     {editingPrice === order.id ? (
                       <div className="flex items-center gap-2">
@@ -142,8 +142,8 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                           type="number"
                           value={priceInput}
                           onChange={(e) => setPriceInput(e.target.value)}
-                          placeholder="Введите цену"
-                          className="w-32"
+                          placeholder="Цена"
+                          className="w-24 md:w-32 text-sm"
                           autoFocus
                         />
                         <Button 
@@ -172,12 +172,13 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                       </div>
                     ) : (
                       <>
-                        <p className="text-lg font-semibold text-primary">
-                          {order.estimated_price ? `${order.estimated_price} ₽` : 'Цена не указана'}
+                        <p className="text-base md:text-lg font-semibold text-primary">
+                          {order.estimated_price ? `${order.estimated_price} ₽` : 'Не указана'}
                         </p>
                         <Button
                           size="sm"
                           variant="ghost"
+                          className="h-8 w-8 p-0"
                           onClick={() => {
                             setEditingPrice(order.id);
                             setPriceInput(order.estimated_price?.toString() || '');
@@ -188,19 +189,21 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                       </>
                     )}
                   </div>
-                  <div className="space-x-2">
+                  <div className="flex flex-wrap gap-1.5 md:gap-2">
                     <Button 
                       size="sm" 
                       variant="outline"
                       onClick={() => setSelectedOrder(order)}
+                      className="text-xs md:text-sm px-2 md:px-3"
                     >
-                      <Icon name="Eye" size={14} className="mr-1" />
-                      Подробнее
+                      <Icon name="Eye" size={14} className="md:mr-1" />
+                      <span className="hidden sm:inline">Подробнее</span>
                     </Button>
                     {order.status === 'new' && (
                       <Button 
                         size="sm"
                         onClick={() => onUpdateStatus(order.id, 'confirmed')}
+                        className="text-xs md:text-sm px-2 md:px-3"
                       >
                         Подтвердить
                       </Button>
@@ -209,6 +212,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                       <Button 
                         size="sm"
                         onClick={() => onUpdateStatus(order.id, 'in_progress')}
+                        className="text-xs md:text-sm px-2 md:px-3"
                       >
                         В работу
                       </Button>
@@ -217,6 +221,7 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                       <Button 
                         size="sm"
                         onClick={() => onUpdateStatus(order.id, 'completed')}
+                        className="text-xs md:text-sm px-2 md:px-3"
                       >
                         Завершить
                       </Button>
@@ -226,9 +231,10 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                         <Button 
                           size="sm" 
                           variant="destructive"
+                          className="text-xs md:text-sm px-2 md:px-3"
                         >
-                          <Icon name="Trash2" size={14} className="mr-1" />
-                          Удалить
+                          <Icon name="Trash2" size={14} className="md:mr-1" />
+                          <span className="hidden sm:inline">Удалить</span>
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
