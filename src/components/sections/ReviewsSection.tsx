@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/components/ui/use-toast';
 import Icon from '@/components/ui/icon';
 
 interface Review {
@@ -20,6 +21,7 @@ interface Review {
 }
 
 const ReviewsSection = () => {
+  const { toast } = useToast();
   const [reviewName, setReviewName] = useState('');
   const [reviewPet, setReviewPet] = useState('');
   const [reviewRating, setReviewRating] = useState(0);
@@ -76,7 +78,12 @@ const ReviewsSection = () => {
 
   const handleSubmitReview = async () => {
     if (!reviewName || !reviewRating || !reviewText) {
-      alert('Пожалуйста, заполните все обязательные поля');
+      toast({
+        title: '⚠️ Заполните обязательные поля',
+        description: 'Пожалуйста, укажите ваше имя, оценку и текст отзыва',
+        variant: 'destructive',
+        duration: 4000,
+      });
       return;
     }
 
@@ -99,17 +106,31 @@ const ReviewsSection = () => {
       const result = await response.json();
 
       if (response.ok) {
-        alert('Спасибо за отзыв! Мы опубликуем его после модерации.');
+        toast({
+          title: '✅ Отзыв успешно отправлен!',
+          description: 'Спасибо! Мы опубликуем ваш отзыв после модерации.',
+          duration: 6000,
+        });
         setReviewName('');
         setReviewPet('');
         setReviewRating(0);
         setReviewText('');
       } else {
-        alert('Ошибка: ' + (result.error || 'Не удалось отправить отзыв'));
+        toast({
+          title: '❌ Ошибка отправки',
+          description: result.error || 'Не удалось отправить отзыв. Попробуйте еще раз.',
+          variant: 'destructive',
+          duration: 5000,
+        });
       }
     } catch (error) {
       console.error('Ошибка отправки отзыва:', error);
-      alert('Ошибка подключения к серверу');
+      toast({
+        title: '❌ Ошибка подключения',
+        description: 'Проверьте интернет-соединение и попробуйте еще раз.',
+        variant: 'destructive',
+        duration: 5000,
+      });
     } finally {
       setReviewSubmitting(false);
     }
