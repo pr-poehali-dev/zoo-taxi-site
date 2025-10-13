@@ -28,6 +28,7 @@ interface AdminTabsProps {
   };
   onUpdateOrderStatus: (orderId: number, status: Order['status']) => void;
   onUpdateOrderPrice: (orderId: number, price: number) => void;
+  onUpdateOrderNotes: (orderId: number, adminNotes: string, cancellationReason?: string) => void;
   onDeleteOrder: (orderId: number) => void;
   onPublishReview: (reviewId: number, publish: boolean) => void;
   onSetFeaturedReview: (reviewId: number, featured: boolean) => void;
@@ -47,6 +48,7 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
   notifications,
   onUpdateOrderStatus,
   onUpdateOrderPrice,
+  onUpdateOrderNotes,
   onDeleteOrder,
   onPublishReview,
   onSetFeaturedReview,
@@ -103,6 +105,7 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
           orders={orders} 
           onUpdateStatus={onUpdateOrderStatus}
           onUpdatePrice={onUpdateOrderPrice}
+          onUpdateNotes={onUpdateOrderNotes}
           onDelete={onDeleteOrder}
         />
       </TabsContent>

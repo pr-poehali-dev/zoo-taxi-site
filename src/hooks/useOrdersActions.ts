@@ -135,9 +135,62 @@ export const useOrdersActions = (
     }
   };
 
+  const updateOrderNotes = async (orderId: number, adminNotes: string, cancellationReason?: string) => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/1c0b122d-a5b5-4727-aaa6-681c30e9f3f3', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: orderId,
+          admin_notes: adminNotes,
+          cancellation_reason: cancellationReason
+        })
+      });
+      
+      const result = await response.json();
+      
+      if (response.ok) {
+        setOrders(orders.map(order => 
+          order.id === orderId 
+            ? { 
+                ...order, 
+                admin_notes: adminNotes,
+                cancellation_reason: cancellationReason,
+                updated_at: new Date().toISOString() 
+              }
+            : order
+        ));
+        
+        toast({
+          title: cancellationReason ? 'Заказ отменен' : 'Комментарий сохранен',
+          description: cancellationReason 
+            ? `Заказ #${orderId} отменен с указанием причины`
+            : `Комментарий к заказу #${orderId} обновлен`,
+        });
+      } else {
+        console.error('Ошибка обновления комментария:', result.error);
+        toast({
+          title: 'Ошибка',
+          description: 'Не удалось сохранить комментарий',
+          variant: 'destructive',
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка сети при обновлении комментария:', error);
+      toast({
+        title: 'Ошибка сети',
+        description: 'Не удалось подключиться к серверу',
+        variant: 'destructive',
+      });
+    }
+  };
+
   return {
     deleteOrder,
     updateOrderStatus,
-    updateOrderPrice
+    updateOrderPrice,
+    updateOrderNotes
   };
 };

@@ -17,6 +17,8 @@ export interface Order {
   comments?: string;
   estimated_price?: number;
   status: 'new' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled';
+  admin_notes?: string;
+  cancellation_reason?: string;
   created_at: string;
   updated_at: string;
 }

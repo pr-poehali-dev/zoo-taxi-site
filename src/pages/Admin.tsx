@@ -63,7 +63,8 @@ const Admin: React.FC = () => {
   const {
     deleteOrder,
     updateOrderStatus,
-    updateOrderPrice
+    updateOrderPrice,
+    updateOrderNotes
   } = useOrdersActions(orders, setOrders);
 
   const {
@@ -161,6 +162,7 @@ const Admin: React.FC = () => {
           notifications={notifications}
           onUpdateOrderStatus={updateOrderStatus}
           onUpdateOrderPrice={updateOrderPrice}
+          onUpdateOrderNotes={updateOrderNotes}
           onDeleteOrder={deleteOrder}
           onPublishReview={publishReview}
           onSetFeaturedReview={setFeaturedReview}

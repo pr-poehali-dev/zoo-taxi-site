@@ -15,21 +15,27 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import Icon from '@/components/ui/icon';
+import OrderDetailsDialog from './OrderDetailsDialog';
+import OrderNotesDialog from './OrderNotesDialog';
 import type { Order } from './types';
 
 interface OrdersTabProps {
   orders: Order[];
   onUpdateStatus: (orderId: number, status: Order['status']) => void;
   onUpdatePrice: (orderId: number, price: number) => void;
+  onUpdateNotes: (orderId: number, adminNotes: string, cancellationReason?: string) => void;
   onDelete: (orderId: number) => void;
 }
 
-const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdatePrice, onDelete }) => {
+const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdatePrice, onUpdateNotes, onDelete }) => {
   const [orderStatusFilter, setOrderStatusFilter] = useState<string>('all');
   const [orderSearchQuery, setOrderSearchQuery] = useState<string>('');
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [editingPrice, setEditingPrice] = useState<number | null>(null);
   const [priceInput, setPriceInput] = useState<string>('');
+  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [notesDialogOpen, setNotesDialogOpen] = useState(false);
+  const [notesDialogMode, setNotesDialogMode] = useState<'notes' | 'cancel'>('notes');
 
   const getStatusBadge = (status: Order['status']) => {
     const styles = {
@@ -193,11 +199,27 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                     <Button 
                       size="sm" 
                       variant="outline"
-                      onClick={() => setSelectedOrder(order)}
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setDetailsDialogOpen(true);
+                      }}
                       className="text-xs md:text-sm px-2 md:px-3"
                     >
                       <Icon name="Eye" size={14} className="md:mr-1" />
                       <span className="hidden sm:inline">Подробнее</span>
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="outline"
+                      onClick={() => {
+                        setSelectedOrder(order);
+                        setNotesDialogMode('notes');
+                        setNotesDialogOpen(true);
+                      }}
+                      className="text-xs md:text-sm px-2 md:px-3"
+                    >
+                      <Icon name="MessageSquare" size={14} className="md:mr-1" />
+                      <span className="hidden sm:inline">Комментарий</span>
                     </Button>
                     {order.status === 'new' && (
                       <>
@@ -211,7 +233,11 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                         <Button 
                           size="sm"
                           variant="outline"
-                          onClick={() => onUpdateStatus(order.id, 'cancelled')}
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setNotesDialogMode('cancel');
+                            setNotesDialogOpen(true);
+                          }}
                           className="text-xs md:text-sm px-2 md:px-3 text-red-600 hover:text-red-700"
                         >
                           <Icon name="X" size={14} className="md:mr-1" />
@@ -231,7 +257,11 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                         <Button 
                           size="sm"
                           variant="outline"
-                          onClick={() => onUpdateStatus(order.id, 'cancelled')}
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setNotesDialogMode('cancel');
+                            setNotesDialogOpen(true);
+                          }}
                           className="text-xs md:text-sm px-2 md:px-3 text-red-600 hover:text-red-700"
                         >
                           <Icon name="X" size={14} className="md:mr-1" />
@@ -251,7 +281,11 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
                         <Button 
                           size="sm"
                           variant="outline"
-                          onClick={() => onUpdateStatus(order.id, 'cancelled')}
+                          onClick={() => {
+                            setSelectedOrder(order);
+                            setNotesDialogMode('cancel');
+                            setNotesDialogOpen(true);
+                          }}
                           className="text-xs md:text-sm px-2 md:px-3 text-red-600 hover:text-red-700"
                         >
                           <Icon name="X" size={14} className="md:mr-1" />
@@ -299,6 +333,31 @@ const OrdersTab: React.FC<OrdersTabProps> = ({ orders, onUpdateStatus, onUpdateP
           )}
         </div>
       </CardContent>
+
+      <OrderDetailsDialog
+        order={selectedOrder}
+        isOpen={detailsDialogOpen}
+        onClose={() => {
+          setDetailsDialogOpen(false);
+          setSelectedOrder(null);
+        }}
+      />
+
+      <OrderNotesDialog
+        order={selectedOrder}
+        isOpen={notesDialogOpen}
+        onClose={() => {
+          setNotesDialogOpen(false);
+          setSelectedOrder(null);
+        }}
+        onSave={(orderId, adminNotes, cancellationReason) => {
+          onUpdateNotes(orderId, adminNotes, cancellationReason);
+          if (notesDialogMode === 'cancel' && cancellationReason) {
+            onUpdateStatus(orderId, 'cancelled');
+          }
+        }}
+        mode={notesDialogMode}
+      />
     </Card>
   );
 };

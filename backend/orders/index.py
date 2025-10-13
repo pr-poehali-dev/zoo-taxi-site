@@ -55,6 +55,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                        pet_breed, pet_weight, pet_special_needs, service_type, 
                        pickup_address, destination_address, preferred_date, preferred_time,
                        additional_services, comments, estimated_price, status,
+                       admin_notes, cancellation_reason,
                        created_at, updated_at
                 FROM orders
             """
@@ -183,6 +184,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
             order_id = body_data.get('id')
             new_status = body_data.get('status')
             estimated_price = body_data.get('estimated_price')
+            admin_notes = body_data.get('admin_notes')
+            cancellation_reason = body_data.get('cancellation_reason')
             
             if not order_id:
                 return {
@@ -193,12 +196,12 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 }
             
             # Проверяем, что есть хотя бы одно поле для обновления
-            if not new_status and estimated_price is None:
+            if not new_status and estimated_price is None and admin_notes is None and cancellation_reason is None:
                 return {
                     'statusCode': 400,
                     'headers': {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
                     'isBase64Encoded': False,
-                    'body': json.dumps({'error': 'Необходимо указать статус или цену для обновления'})
+                    'body': json.dumps({'error': 'Необходимо указать данные для обновления'})
                 }
             
             # Проверяем валидность статуса, если он указан
@@ -224,6 +227,14 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 update_fields.append('estimated_price = %s')
                 update_params.append(estimated_price)
             
+            if admin_notes is not None:
+                update_fields.append('admin_notes = %s')
+                update_params.append(admin_notes)
+            
+            if cancellation_reason is not None:
+                update_fields.append('cancellation_reason = %s')
+                update_params.append(cancellation_reason)
+            
             update_fields.append('updated_at = CURRENT_TIMESTAMP')
             update_params.append(order_id)
             
@@ -231,7 +242,7 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                 UPDATE orders 
                 SET {', '.join(update_fields)}
                 WHERE id = %s
-                RETURNING id, status, estimated_price
+                RETURNING id, status, estimated_price, admin_notes, cancellation_reason
             """
             
             cursor.execute(update_query, update_params)
@@ -255,6 +266,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'id': result[0],
                     'status': result[1],
                     'estimated_price': float(result[2]) if result[2] else None,
+                    'admin_notes': result[3],
+                    'cancellation_reason': result[4],
                     'message': 'Заявка обновлена'
                 })
             }
