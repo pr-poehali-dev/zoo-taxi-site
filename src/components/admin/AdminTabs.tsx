@@ -41,6 +41,9 @@ interface AdminTabsProps {
   onSaveContacts: (contacts: typeof contacts) => void;
   onSaveNotifications: (notifications: typeof notifications) => void;
   onChangePassword: (currentPassword: string, newPassword: string) => Promise<boolean>;
+  recoveryEmail?: string;
+  onSetRecoveryEmail: (email: string) => void;
+  onSendRecoveryEmail: (email: string) => Promise<boolean>;
 }
 
 const AdminTabs: React.FC<AdminTabsProps> = ({
@@ -62,7 +65,10 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
   onDeletePassenger,
   onSaveContacts,
   onSaveNotifications,
-  onChangePassword
+  onChangePassword,
+  recoveryEmail,
+  onSetRecoveryEmail,
+  onSendRecoveryEmail
 }) => {
   return (
     <Tabs defaultValue="analytics" className="space-y-4 md:space-y-6">
@@ -155,6 +161,9 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
       <TabsContent value="security">
         <SecurityTab 
           onChangePassword={onChangePassword}
+          recoveryEmail={recoveryEmail}
+          onSetRecoveryEmail={onSetRecoveryEmail}
+          onSendRecoveryEmail={onSendRecoveryEmail}
         />
       </TabsContent>
     </Tabs>

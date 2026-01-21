@@ -14,6 +14,7 @@ import { usePassengersActions } from '@/hooks/usePassengersActions';
 import { useSettingsActions } from '@/hooks/useSettingsActions';
 
 const STORAGE_KEY = 'admin_password';
+const RECOVERY_EMAIL_KEY = 'admin_recovery_email';
 const DEFAULT_PASSWORD = 'Zootaxi2026';
 
 const getStoredPassword = (): string => {
@@ -24,10 +25,19 @@ const setStoredPassword = (password: string): void => {
   localStorage.setItem(STORAGE_KEY, password);
 };
 
+const getRecoveryEmail = (): string => {
+  return localStorage.getItem(RECOVERY_EMAIL_KEY) || '';
+};
+
+const setRecoveryEmail = (email: string): void => {
+  localStorage.setItem(RECOVERY_EMAIL_KEY, email);
+};
+
 const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [recoveryEmail, setRecoveryEmailState] = useState(getRecoveryEmail());
 
   useEffect(() => {
     const savedAuth = sessionStorage.getItem('adminAuth');
@@ -54,6 +64,37 @@ const Admin: React.FC = () => {
     }
     setStoredPassword(newPassword);
     return true;
+  };
+
+  const handleSetRecoveryEmail = (email: string): void => {
+    setRecoveryEmail(email);
+    setRecoveryEmailState(email);
+  };
+
+  const handleSendRecoveryEmail = async (email: string): Promise<boolean> => {
+    try {
+      const currentPassword = getStoredPassword();
+      const response = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          service_id: 'service_default',
+          template_id: 'template_password_recovery',
+          user_id: 'public_key',
+          template_params: {
+            to_email: email,
+            password: currentPassword,
+            recovery_date: new Date().toLocaleString('ru-RU'),
+          },
+        }),
+      });
+      return response.ok;
+    } catch (error) {
+      console.error('Failed to send recovery email:', error);
+      return false;
+    }
   };
 
   const handleLogout = () => {
@@ -143,6 +184,26 @@ const Admin: React.FC = () => {
               </Button>
             </form>
 
+            {recoveryEmail && (
+              <div className="mt-4">
+                <Button 
+                  variant="link" 
+                  className="w-full text-sm"
+                  onClick={async () => {
+                    const success = await handleSendRecoveryEmail(recoveryEmail);
+                    if (success) {
+                      alert(`Пароль отправлен на ${recoveryEmail}`);
+                    } else {
+                      alert('Не удалось отправить письмо. Обратитесь к администратору.');
+                    }
+                  }}
+                >
+                  <Icon name="Mail" size={16} className="mr-2" />
+                  Забыли пароль? Отправить на email
+                </Button>
+              </div>
+            )}
+
             <div className="mt-6 pt-6 border-t border-gray-200 text-center">
               <a href="/" className="text-sm text-gray-600 hover:text-primary transition-colors">
                 ← Вернуться на главную
@@ -192,6 +253,9 @@ const Admin: React.FC = () => {
           onSaveContacts={handleSaveContacts}
           onSaveNotifications={handleSaveNotifications}
           onChangePassword={handleChangePassword}
+          recoveryEmail={recoveryEmail}
+          onSetRecoveryEmail={handleSetRecoveryEmail}
+          onSendRecoveryEmail={handleSendRecoveryEmail}
         />
       </div>
     </div>
