@@ -13,7 +13,7 @@ import { useReviewsActions } from '@/hooks/useReviewsActions';
 import { usePassengersActions } from '@/hooks/usePassengersActions';
 import { useSettingsActions } from '@/hooks/useSettingsActions';
 
-const ADMIN_PASSWORD = 'zootaxi2024';
+const ADMIN_PASSWORD = 'Zootaxi2026';
 
 const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
