@@ -13,7 +13,16 @@ import { useReviewsActions } from '@/hooks/useReviewsActions';
 import { usePassengersActions } from '@/hooks/usePassengersActions';
 import { useSettingsActions } from '@/hooks/useSettingsActions';
 
-const ADMIN_PASSWORD = 'Zootaxi2026';
+const STORAGE_KEY = 'admin_password';
+const DEFAULT_PASSWORD = 'Zootaxi2026';
+
+const getStoredPassword = (): string => {
+  return localStorage.getItem(STORAGE_KEY) || DEFAULT_PASSWORD;
+};
+
+const setStoredPassword = (password: string): void => {
+  localStorage.setItem(STORAGE_KEY, password);
+};
 
 const Admin: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -29,7 +38,7 @@ const Admin: React.FC = () => {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === ADMIN_PASSWORD) {
+    if (password === getStoredPassword()) {
       setIsAuthenticated(true);
       sessionStorage.setItem('adminAuth', 'true');
       setError('');
@@ -37,6 +46,14 @@ const Admin: React.FC = () => {
       setError('Неверный пароль');
       setPassword('');
     }
+  };
+
+  const handleChangePassword = async (currentPassword: string, newPassword: string): Promise<boolean> => {
+    if (currentPassword !== getStoredPassword()) {
+      return false;
+    }
+    setStoredPassword(newPassword);
+    return true;
   };
 
   const handleLogout = () => {
@@ -174,6 +191,7 @@ const Admin: React.FC = () => {
           onDeletePassenger={deletePassenger}
           onSaveContacts={handleSaveContacts}
           onSaveNotifications={handleSaveNotifications}
+          onChangePassword={handleChangePassword}
         />
       </div>
     </div>

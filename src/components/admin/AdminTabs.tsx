@@ -8,6 +8,7 @@ import ReviewsTab from '@/components/admin/ReviewsTab';
 import PassengersTab from '@/components/admin/PassengersTab';
 import ContactsTab from '@/components/admin/ContactsTab';
 import NotificationsTab from '@/components/admin/NotificationsTab';
+import SecurityTab from '@/components/admin/SecurityTab';
 
 import type { Order, Review, Passenger } from '@/components/admin/types';
 
@@ -39,6 +40,7 @@ interface AdminTabsProps {
   onDeletePassenger: (passengerId: number) => void;
   onSaveContacts: (contacts: typeof contacts) => void;
   onSaveNotifications: (notifications: typeof notifications) => void;
+  onChangePassword: (currentPassword: string, newPassword: string) => Promise<boolean>;
 }
 
 const AdminTabs: React.FC<AdminTabsProps> = ({
@@ -59,12 +61,13 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
   onTogglePassengerPublish,
   onDeletePassenger,
   onSaveContacts,
-  onSaveNotifications
+  onSaveNotifications,
+  onChangePassword
 }) => {
   return (
     <Tabs defaultValue="analytics" className="space-y-4 md:space-y-6">
       <div className="overflow-x-auto -mx-3 md:mx-0 px-3 md:px-0">
-        <TabsList className="grid w-full grid-cols-6 min-w-[600px] md:min-w-0 h-auto">
+        <TabsList className="grid w-full grid-cols-7 min-w-[700px] md:min-w-0 h-auto">
           <TabsTrigger value="analytics" className="text-xs md:text-sm px-2 md:px-4 py-2">
             <Icon name="BarChart3" size={16} className="md:mr-2" />
             <span className="hidden md:inline">Аналитика</span>
@@ -91,6 +94,10 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
           <TabsTrigger value="notifications" className="text-xs md:text-sm px-2 md:px-4 py-2">
             <Icon name="Bell" size={16} className="md:mr-2" />
             <span className="hidden md:inline">Уведомления</span>
+          </TabsTrigger>
+          <TabsTrigger value="security" className="text-xs md:text-sm px-2 md:px-4 py-2">
+            <Icon name="Lock" size={16} className="md:mr-2" />
+            <span className="hidden md:inline">Безопасность</span>
           </TabsTrigger>
         </TabsList>
       </div>
@@ -142,6 +149,12 @@ const AdminTabs: React.FC<AdminTabsProps> = ({
         <NotificationsTab 
           notifications={notifications}
           onSave={onSaveNotifications}
+        />
+      </TabsContent>
+
+      <TabsContent value="security">
+        <SecurityTab 
+          onChangePassword={onChangePassword}
         />
       </TabsContent>
     </Tabs>
