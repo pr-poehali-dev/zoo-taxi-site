@@ -12,3 +12,11 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+Sitemap: https://зооуют-такси.рф/sitemap.xml
+
+# Блокируем индексацию служебных файлов
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /*.json
+Disallow: /*.map
